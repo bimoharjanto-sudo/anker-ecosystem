@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="ANKERBELLOK — One Hub. Many Stories.">
+<title>ANKERBELLOK — One Hub. Many Stories.</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--muted:#a9abb7;--line:rgba(255,255,255,.11)}
+body{min-height:100vh;background:radial-gradient(circle at 50% -10%,#24264d 0,transparent 38%),linear-gradient(160deg,#080910,#030408 70%);color:#fff;font-family:Arial,Helvetica,sans-serif}
+.app{max-width:520px;margin:auto;padding:30px 18px 28px}
+.hero{text-align:center;padding:12px 8px 28px}
+.logo{font-size:43px;line-height:1;font-weight:900;font-style:italic;letter-spacing:-2.5px}
+.logo span{color:#ffbd19}
+.tag{margin-top:13px;font-size:12px;letter-spacing:3px;color:#e3e4eb}
+.grid{display:grid;gap:14px}
+.card{min-height:122px;position:relative;display:flex;align-items:center;padding:18px;border:1px solid var(--line);border-radius:24px;background:linear-gradient(145deg,rgba(255,255,255,.085),rgba(255,255,255,.025));text-decoration:none;color:#fff;overflow:hidden;box-shadow:0 16px 42px rgba(0,0,0,.30);transition:.18s ease}
+.card:active{transform:scale(.975)}
+.card:after{content:"";position:absolute;right:-25px;bottom:-45px;width:130px;height:130px;border-radius:50%;background:var(--glow);filter:blur(30px);opacity:.14}
+.tv-card{--glow:#ff1d2d}.shop-card{--glow:#ffb900}.tools-card{--glow:#00a8ff}.music-card{--glow:#d54cff}
+.icon{width:66px;height:66px;flex:0 0 66px;border-radius:20px;margin-right:16px;display:grid;place-items:center;background:rgba(255,255,255,.075);border:1px solid rgba(255,255,255,.09);position:relative;z-index:1}
+.tv-icon{background:#e91c28}.tv-icon:after{content:"";border-left:22px solid white;border-top:14px solid transparent;border-bottom:14px solid transparent;margin-left:4px}
+.shop-icons{font-size:29px;white-space:nowrap}
+.tools-icon{font-size:32px}.violin{font-size:38px}
+.info{position:relative;z-index:1}.info h2{font-size:17px;margin-bottom:7px;letter-spacing:.2px}.info p{font-size:11px;line-height:1.45;color:var(--muted);max-width:250px}
+.badge{display:inline-block;margin-top:8px;font-size:9px;letter-spacing:1.4px;font-weight:700;color:#ffbd19}.tools-card .badge{color:#36baff}
+.arrow{margin-left:auto;position:relative;z-index:1;color:#777b89;font-size:28px;padding-left:8px}.soon{opacity:.72}
+.footer{text-align:center;margin-top:30px;color:#656875;font-size:10px;letter-spacing:2px}.footer strong{display:block;color:#b5b6bf;font-size:12px;letter-spacing:3px;margin-bottom:7px}
+@media(min-width:700px){.app{padding-top:55px}}
+</style>
+</head>
+<body>
+<main class="app">
+<header class="hero">
+  <div class="logo">ANKERBELLOK<span> TV</span></div>
+  <div class="tag">ONE HUB • MANY STORIES</div>
+</header>
+
+<section class="grid">
+  <a class="card tv-card" href="https://www.youtube.com/@ankerbelloktv" target="_blank" rel="noopener noreferrer">
+    <div class="icon tv-icon"></div>
+    <div class="info">
+      <h2>ANKERBELLOK</h2>
+      <p>Second Commercial — TV Ads, But Different.</p>
+      <span class="badge">WATCH NOW</span>
+    </div>
+    <div class="arrow">›</div>
+  </a>
+
+  <a class="card shop-card" href="https://bjards.blogspot.com/" target="_blank" rel="noopener noreferrer">
+    <div class="icon shop-icons">💡 🛒</div>
+    <div class="info">
+      <h2>SHOP</h2>
+      <p>Shopping inspiration, product ideas and great finds.</p>
+      <span class="badge">SHOP NOW</span>
+    </div>
+    <div class="arrow">›</div>
+  </a>
+
+  <div class="card tools-card soon">
+    <div class="icon tools-icon">🛠️</div>
+    <div class="info">
+      <h2>TOOLS</h2>
+      <p>Practical tools are coming soon.</p>
+      <span class="badge">COMING SOON</span>
+    </div>
+    <div class="arrow">›</div>
+  </div>
+
+  <a class="card music-card" href="https://ankerbellok.blogspot.com/" target="_blank" rel="noopener noreferrer">
+    <div class="icon violin">🎻</div>
+    <div class="info">
+      <h2>ANKERBELLOK MUSIC</h2>
+      <p>Music, stories and sounds from AnkerBellok.</p>
+      <span class="badge">LISTEN NOW</span>
+    </div>
+    <div class="arrow">›</div>
+  </a>
+</section>
+
+<footer class="footer">
+  <strong>ANKERBELLOK</strong>
+  ONE HUB • MANY STORIES
+</footer>
+</main>
+</body>
+</html>
