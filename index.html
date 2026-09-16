@@ -580,6 +580,101 @@
       html{scroll-behavior:auto}
       *,*:before,*:after{transition:none!important}
     }
+
+    /* ANKER ONE HUB MENU */
+    .menu-toggle {
+      cursor: pointer;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      padding: 0;
+    }
+
+    .hub-menu {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: rgba(0,0,0,.55);
+      backdrop-filter: blur(10px);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .2s ease, visibility .2s ease;
+    }
+
+    .hub-menu.open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .hub-menu-inner {
+      position: absolute;
+      top: 72px;
+      right: 18px;
+      width: min(310px, calc(100vw - 36px));
+      padding: 22px;
+      border: 1px solid rgba(255,255,255,.12);
+      border-radius: 18px;
+      background: rgba(14,14,14,.96);
+      box-shadow: 0 20px 60px rgba(0,0,0,.5);
+    }
+
+    .hub-menu-title {
+      margin-bottom: 14px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+      font-size: 12px;
+      letter-spacing: .18em;
+      opacity: .55;
+    }
+
+    .hub-menu-inner > a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 13px 8px;
+      color: inherit;
+      text-decoration: none;
+      font-size: 15px;
+      letter-spacing: .08em;
+      border-radius: 10px;
+      transition: background .15s ease, transform .15s ease;
+    }
+
+    .hub-menu-inner > a:hover {
+      background: rgba(255,255,255,.07);
+      transform: translateX(3px);
+    }
+
+    .hub-menu-inner > a span {
+      width: 24px;
+      text-align: center;
+    }
+
+    .private-menu-link {
+      margin-top: 8px;
+      border-top: 1px solid rgba(255,255,255,.08);
+      padding-top: 16px !important;
+    }
+
+    .hub-menu-close {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      font-size: 25px;
+      line-height: 1;
+      cursor: pointer;
+      opacity: .65;
+    }
+
+    .hub-menu-close:hover {
+      opacity: 1;
+    }
+
   </style>
 </head>
 
@@ -597,12 +692,36 @@
         <a class="header-icon" href="#hub" aria-label="Cari / jelajahi">
           <span class="search-icon" aria-hidden="true"></span>
         </a>
-        <a class="header-icon" href="#hub" aria-label="Buka menu">
+        <button class="header-icon menu-toggle" type="button" aria-label="Buka menu" aria-expanded="false">
           <span class="hamburger" aria-hidden="true"><span></span><span></span><span></span></span>
-        </a>
+        </button>
       </div>
     </div>
   </header>
+
+  <div class="hub-menu" id="hub-menu" aria-hidden="true">
+    <div class="hub-menu-inner">
+      <div class="hub-menu-title">ANKER ONE HUB</div>
+
+      <a href="https://www.youtube.com/@ankerbelloktv" target="_blank" rel="noopener">
+        <span>📺</span> TV
+      </a>
+
+      <a href="https://www.youtube.com/@ankerbellok" target="_blank" rel="noopener">
+        <span>🎵</span> MUSIC
+      </a>
+
+      <a href="https://bjards.blogspot.com/" target="_blank" rel="noopener">
+        <span>🛍</span> SHOP
+      </a>
+
+      <a href="#" class="private-menu-link">
+        <span>🔒</span> PRIVATE
+      </a>
+
+      <button class="hub-menu-close" type="button" aria-label="Tutup menu">×</button>
+    </div>
+  </div>
 
   <main>
     <section class="hero" aria-labelledby="hero-title">
@@ -752,6 +871,38 @@
   </footer>
 
   <script>
+    // ANKER ONE HUB MENU
+    const menuToggle = document.querySelector('.menu-toggle');
+    const hubMenu = document.getElementById('hub-menu');
+    const menuClose = document.querySelector('.hub-menu-close');
+
+    function openHubMenu() {
+      hubMenu.classList.add('open');
+      hubMenu.setAttribute('aria-hidden', 'false');
+      menuToggle.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeHubMenu() {
+      hubMenu.classList.remove('open');
+      hubMenu.setAttribute('aria-hidden', 'true');
+      menuToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    menuToggle.addEventListener('click', openHubMenu);
+    menuClose.addEventListener('click', closeHubMenu);
+
+    hubMenu.addEventListener('click', function(e) {
+      if (e.target === hubMenu) {
+        closeHubMenu();
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') {
+        closeHubMenu();
+      }
+    });
+
     // Smooth-scroll fallback untuk browser lama
     document.querySelectorAll('a[href^="#"]').forEach(link => {
       link.addEventListener('click', function(e){
