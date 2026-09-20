@@ -675,7 +675,375 @@
       opacity: 1;
     }
 
-  </style>
+  
+/* ================================
+   ANKER BOT DIGITAL RECEPTIONIST
+   ================================ */
+.anker-receptionist {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 9999;
+  font-family: inherit;
+}
+
+.anker-bot-bubble {
+  width: 58px;
+  height: 58px;
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 50%;
+  background: rgba(10,10,14,.94);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 12px 35px rgba(0,0,0,.45);
+  transition: .25s ease;
+  font-size: 25px;
+}
+
+.anker-bot-bubble:hover {
+  transform: translateY(-3px) scale(1.04);
+  border-color: rgba(190,30,45,.75);
+}
+
+.anker-bot-panel {
+  position: absolute;
+  right: 0;
+  bottom: 72px;
+  width: min(360px, calc(100vw - 32px));
+  height: 470px;
+  background: rgba(12,12,17,.97);
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 18px;
+  overflow: hidden;
+  box-shadow: 0 25px 70px rgba(0,0,0,.58);
+  backdrop-filter: blur(16px);
+  display: none;
+  flex-direction: column;
+}
+
+.anker-bot-panel.open {
+  display: flex;
+  animation: ankerBotIn .22s ease;
+}
+
+@keyframes ankerBotIn {
+  from { opacity: 0; transform: translateY(10px) scale(.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.anker-bot-head {
+  padding: 16px 17px;
+  border-bottom: 1px solid rgba(255,255,255,.09);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.anker-bot-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.anker-bot-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(145deg,#191921,#08080c);
+  border: 1px solid rgba(255,255,255,.16);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+}
+
+.anker-bot-name {
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+.anker-bot-status {
+  color: #8f8f98;
+  font-size: 10px;
+  margin-top: 2px;
+}
+
+.anker-bot-close {
+  border: 0;
+  background: transparent;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 23px;
+  line-height: 1;
+}
+
+.anker-bot-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.anker-bot-msg {
+  max-width: 86%;
+  padding: 10px 12px;
+  border-radius: 13px;
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+
+.anker-bot-msg.bot {
+  align-self: flex-start;
+  background: rgba(255,255,255,.07);
+  color: #eee;
+  border-bottom-left-radius: 4px;
+}
+
+.anker-bot-msg.user {
+  align-self: flex-end;
+  background: rgba(145,20,35,.82);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.anker-bot-input {
+  padding: 12px;
+  border-top: 1px solid rgba(255,255,255,.09);
+  display: flex;
+  gap: 8px;
+}
+
+.anker-bot-input input {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 11px;
+  background: rgba(255,255,255,.05);
+  color: #fff;
+  padding: 11px 12px;
+  outline: none;
+  font: inherit;
+}
+
+.anker-bot-input input:focus {
+  border-color: rgba(180,30,45,.7);
+}
+
+.anker-bot-send {
+  width: 44px;
+  border: 0;
+  border-radius: 11px;
+  background: #9d1d2e;
+  color: #fff;
+  cursor: pointer;
+  font-size: 17px;
+}
+
+.anker-bot-send:disabled {
+  opacity: .5;
+  cursor: default;
+}
+
+@media (max-width: 600px) {
+  .anker-receptionist {
+    right: 14px;
+    bottom: 14px;
+  }
+
+  .anker-bot-panel {
+    right: -2px;
+    bottom: 68px;
+    height: min(470px, calc(100vh - 105px));
+  }
+}
+
+
+
+/* =========================================================
+   ANKER NEWS TICKER
+   ========================================================= */
+.news-ticker {
+  width: 100%;
+  min-height: 64px;
+  display: flex;
+  align-items: stretch;
+  background:
+    linear-gradient(90deg, rgba(8,8,10,.98), rgba(15,10,12,.96));
+  border-top: 1px solid rgba(255,255,255,.07);
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  overflow: hidden;
+  position: relative;
+  z-index: 5;
+}
+
+.news-label {
+  flex: 0 0 auto;
+  min-width: 148px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 0 18px;
+  background: linear-gradient(135deg, #8e1828, #b51f32);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+  white-space: nowrap;
+  box-shadow: 8px 0 22px rgba(0,0,0,.28);
+}
+
+.news-live-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 0 rgba(255,255,255,.65);
+  animation: ankerNewsPulse 1.8s infinite;
+}
+
+@keyframes ankerNewsPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255,255,255,.65);
+  }
+  70% {
+    box-shadow: 0 0 0 7px rgba(255,255,255,0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(255,255,255,0);
+  }
+}
+
+.news-window {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.news-window::before,
+.news-window::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 42px;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.news-window::before {
+  left: 0;
+  background: linear-gradient(90deg, rgba(8,8,10,1), transparent);
+}
+
+.news-window::after {
+  right: 0;
+  background: linear-gradient(270deg, rgba(8,8,10,1), transparent);
+}
+
+.news-track {
+  display: inline-flex;
+  align-items: center;
+  width: max-content;
+  white-space: nowrap;
+  animation: ankerNewsMove 32s linear infinite;
+  will-change: transform;
+}
+
+.news-ticker:hover .news-track {
+  animation-play-state: paused;
+}
+
+.news-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 34px;
+  color: rgba(255,255,255,.82);
+  font-size: 13px;
+  letter-spacing: .25px;
+}
+
+.news-item strong {
+  color: #d52a40;
+  font-size: 10px;
+  letter-spacing: 1.2px;
+}
+
+.news-separator {
+  color: rgba(255,255,255,.22);
+}
+
+@keyframes ankerNewsMove {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.news-next {
+  flex: 0 0 52px;
+  border: 0;
+  border-left: 1px solid rgba(255,255,255,.08);
+  background: rgba(255,255,255,.025);
+  color: rgba(255,255,255,.75);
+  font-size: 19px;
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease;
+}
+
+.news-next:hover {
+  background: rgba(157,29,46,.2);
+  color: #fff;
+}
+
+@media (max-width: 600px) {
+  .news-ticker {
+    min-height: 58px;
+  }
+
+  .news-label {
+    min-width: 108px;
+    padding: 0 11px;
+    font-size: 9px;
+    letter-spacing: 1.3px;
+  }
+
+  .news-item {
+    padding: 0 24px;
+    font-size: 11px;
+  }
+
+  .news-next {
+    flex-basis: 44px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .news-track {
+    animation: none;
+    transform: none;
+  }
+
+  .news-live-dot {
+    animation: none;
+  }
+}
+
+</style>
 </head>
 
 <body id="top">
@@ -727,7 +1095,35 @@
     </div>
   </div>
 
-  <main>
+  
+<!-- ANKER BOT DIGITAL RECEPTIONIST -->
+<div class="anker-receptionist" id="anker-receptionist">
+  <div class="anker-bot-panel" id="anker-bot-panel" aria-hidden="true">
+    <div class="anker-bot-head">
+      <div class="anker-bot-title">
+        <div class="anker-bot-icon">🤖</div>
+        <div>
+          <div class="anker-bot-name">ANKER BOT</div>
+          <div class="anker-bot-status">Digital Receptionist • Online</div>
+        </div>
+      </div>
+      <button class="anker-bot-close" id="anker-bot-close" type="button" aria-label="Tutup ANKER BOT">×</button>
+    </div>
+
+    <div class="anker-bot-messages" id="anker-bot-messages"></div>
+
+    <form class="anker-bot-input" id="anker-bot-form">
+      <input id="anker-bot-input" type="text" autocomplete="off"
+             placeholder="Tulis pesan..." aria-label="Pesan untuk ANKER BOT">
+      <button class="anker-bot-send" id="anker-bot-send" type="submit" aria-label="Kirim">→</button>
+    </form>
+  </div>
+
+  <button class="anker-bot-bubble" id="anker-bot-bubble" type="button"
+          aria-label="Buka ANKER BOT" aria-expanded="false">🤖</button>
+</div>
+
+<main>
     <section class="hero" aria-labelledby="hero-title">
       <div class="hero-bg" aria-hidden="true"></div>
 
@@ -754,6 +1150,92 @@
 
       <div class="script" aria-hidden="true">Same Vision<br>Different<br>Stories</div>
     </section>
+
+
+<!-- ANKER NEWS UPDATE -->
+<section class="news-ticker" id="anker-news-ticker" aria-label="ANKER News Update">
+  <div class="news-label">
+    <span class="news-live-dot" aria-hidden="true"></span>
+    <span>ANKER NEWS</span>
+  </div>
+
+  <div class="news-window">
+    <div class="news-track" id="ankerNewsTrack">
+
+      <div class="news-item">
+        <strong>TECH</strong>
+        <span>AI Agents berkembang menuju otomatisasi real-time</span>
+        <span class="news-separator">◆</span>
+      </div>
+
+      <div class="news-item">
+        <strong>DIGITAL</strong>
+        <span>Teknologi digital terus menghadirkan cara baru untuk bekerja</span>
+        <span class="news-separator">◆</span>
+      </div>
+
+      <div class="news-item">
+        <strong>MUSIC</strong>
+        <span>Eksplorasi musik digital dan soundscape terus berkembang</span>
+        <span class="news-separator">◆</span>
+      </div>
+
+      <div class="news-item">
+        <strong>ANKER</strong>
+        <span>ANKER ONE HUB menghadirkan informasi dan tools dalam satu tempat</span>
+        <span class="news-separator">◆</span>
+      </div>
+
+      <div class="news-item">
+        <strong>UPDATE</strong>
+        <span>Ikuti berbagai update terbaru dari dunia digital</span>
+        <span class="news-separator">◆</span>
+      </div>
+
+      <!-- DUPLIKASI UNTUK LOOP HALUS -->
+      <div class="news-item" aria-hidden="true">
+        <strong>TECH</strong>
+        <span>AI Agents berkembang menuju otomatisasi real-time</span>
+        <span class="news-separator">◆</span>
+      </div>
+
+      <div class="news-item" aria-hidden="true">
+        <strong>DIGITAL</strong>
+        <span>Teknologi digital terus menghadirkan cara baru untuk bekerja</span>
+        <span class="news-separator">◆</span>
+      </div>
+
+      <div class="news-item" aria-hidden="true">
+        <strong>MUSIC</strong>
+        <span>Eksplorasi musik digital dan soundscape terus berkembang</span>
+        <span class="news-separator">◆</span>
+      </div>
+
+      <div class="news-item" aria-hidden="true">
+        <strong>ANKER</strong>
+        <span>ANKER ONE HUB menghadirkan informasi dan tools dalam satu tempat</span>
+        <span class="news-separator">◆</span>
+      </div>
+
+      <div class="news-item" aria-hidden="true">
+        <strong>UPDATE</strong>
+        <span>Ikuti berbagai update terbaru dari dunia digital</span>
+        <span class="news-separator">◆</span>
+      </div>
+
+    </div>
+  </div>
+
+  <button
+    class="news-next"
+    id="ankerNewsNext"
+    type="button"
+    aria-label="Jeda berita">
+    →
+  </button>
+</section>
+
+
 
     <section class="hub-section" id="hub" aria-label="Empat pilar Anker One Hub">
       <div class="cards">
@@ -917,7 +1399,157 @@
         }
       });
     });
-  </script>
+  
+// ================================
+// ANKER BOT DIGITAL RECEPTIONIST
+// ================================
+(function () {
+  const BOT_API = "https://anker-bot-web.bimoharjanto.workers.dev/api/chat";
+
+  const bubble = document.getElementById("anker-bot-bubble");
+  const panel = document.getElementById("anker-bot-panel");
+  const closeBtn = document.getElementById("anker-bot-close");
+  const form = document.getElementById("anker-bot-form");
+  const input = document.getElementById("anker-bot-input");
+  const sendBtn = document.getElementById("anker-bot-send");
+  const messages = document.getElementById("anker-bot-messages");
+
+  if (!bubble || !panel || !form || !input || !messages) return;
+
+  let history = [];
+
+  function addMessage(text, type) {
+    const el = document.createElement("div");
+    el.className = "anker-bot-msg " + type;
+    el.textContent = text;
+    messages.appendChild(el);
+    messages.scrollTop = messages.scrollHeight;
+  }
+
+  function openBot() {
+    panel.classList.add("open");
+    panel.setAttribute("aria-hidden", "false");
+    bubble.setAttribute("aria-expanded", "true");
+    setTimeout(() => input.focus(), 100);
+  }
+
+  function closeBot() {
+    panel.classList.remove("open");
+    panel.setAttribute("aria-hidden", "true");
+    bubble.setAttribute("aria-expanded", "false");
+  }
+
+  async function askBot(message) {
+    sendBtn.disabled = true;
+    input.disabled = true;
+
+    try {
+      const response = await fetch(BOT_API, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({message, history})
+      });
+
+      const data = await response.json();
+
+      if (!response.ok || !data.ok) {
+        throw new Error(data.error || "BOT unavailable");
+      }
+
+      addMessage(data.reply, "bot");
+
+      history.push({intent: data.intent || "unknown"});
+      if (history.length > 10) history = history.slice(-10);
+
+    } catch {
+      addMessage(
+        "Maaf, ANKER BOT sedang tidak dapat terhubung. Silakan coba lagi.",
+        "bot"
+      );
+    } finally {
+      sendBtn.disabled = false;
+      input.disabled = false;
+      input.focus();
+    }
+  }
+
+  bubble.addEventListener("click", function () {
+    if (panel.classList.contains("open")) closeBot();
+    else openBot();
+  });
+
+  closeBtn.addEventListener("click", closeBot);
+
+  form.addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const message = input.value.trim();
+    if (!message || sendBtn.disabled) return;
+
+    addMessage(message, "user");
+    input.value = "";
+    askBot(message);
+  });
+
+  // Auto greeting saat pengunjung masuk.
+  setTimeout(async function () {
+    openBot();
+
+    try {
+      const response = await fetch(BOT_API, {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({message: "Halo", history: []})
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.ok) {
+        addMessage(data.reply, "bot");
+        history.push({intent: data.intent || "greeting"});
+      } else {
+        throw new Error("Greeting failed");
+      }
+    } catch {
+      addMessage(
+        "Halo! Selamat datang di ANKER ONE HUB. Ada yang ingin kamu cari?",
+        "bot"
+      );
+    }
+  }, 900);
+})();
+
+</script>
+
+
+
+<script>
+/* =========================================================
+   ANKER NEWS TICKER CONTROL
+   ========================================================= */
+(function () {
+  const track = document.getElementById("ankerNewsTrack");
+  const next = document.getElementById("ankerNewsNext");
+
+  if (!track) return;
+
+  if (next) {
+    next.addEventListener("click", function () {
+      const paused = getComputedStyle(track).animationPlayState === "paused";
+
+      if (paused) {
+        track.style.animationPlayState = "running";
+        next.setAttribute("aria-label", "Jeda berita");
+        next.textContent = "→";
+      } else {
+        track.style.animationPlayState = "paused";
+        next.setAttribute("aria-label", "Lanjutkan berita");
+        next.textContent = "Ⅱ";
+      }
+    });
+  }
+})();
+</script>
 
 </body>
 </html>
