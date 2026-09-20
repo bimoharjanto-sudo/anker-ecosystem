@@ -1,0 +1,6 @@
+.wrangler/
+.git/
+*.BACKUP_*
+*.bak
+*.bak_*
+*.py
