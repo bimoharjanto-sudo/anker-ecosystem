@@ -957,7 +957,7 @@
   align-items: center;
   width: max-content;
   white-space: nowrap;
-  animation: ankerNewsMove 32s linear infinite !important;
+  animation: ankerNewsMove 50s linear infinite !important;
   will-change: transform;
 }
 
@@ -1030,7 +1030,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .news-track {
-    animation: ankerNewsMove 32s linear infinite !important;
+    animation: ankerNewsMove 50s linear infinite !important;
     transform: translateX(0);
   }
 
@@ -1040,6 +1040,122 @@
 }
 
 </style>
+
+
+<style>
+/* =========================================================
+   ANKER SHOP RSS FEED V1
+   ========================================================= */
+.anker-shop-section {
+  margin: 22px 0;
+  width: 100%;
+}
+
+.anker-shop-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.anker-shop-title::before {
+  content: "◆";
+  font-size: 11px;
+}
+
+.anker-shop-feed {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  border-radius: 12px;
+}
+
+.anker-shop-track {
+  display: flex;
+  width: max-content;
+  gap: 14px;
+  animation: ankerShopMove 45s linear infinite;
+  will-change: transform;
+}
+
+.anker-shop-track:hover {
+  animation-play-state: paused;
+}
+
+.anker-shop-card {
+  flex: 0 0 260px;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.035);
+  text-decoration: none;
+  color: inherit;
+  transition: transform .2s ease, border-color .2s ease;
+}
+
+.anker-shop-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(255,255,255,.3);
+}
+
+.anker-shop-image {
+  display: block;
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  background: rgba(255,255,255,.04);
+}
+
+.anker-shop-info {
+  padding: 11px 12px 13px;
+}
+
+.anker-shop-name {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.35;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.anker-shop-source {
+  margin-top: 7px;
+  font-size: 11px;
+  opacity: .65;
+  letter-spacing: .5px;
+}
+
+.anker-shop-status {
+  padding: 14px;
+  text-align: center;
+  opacity: .65;
+  font-size: 13px;
+}
+
+@keyframes ankerShopMove {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 600px) {
+  .anker-shop-card {
+    flex-basis: 220px;
+  }
+
+  .anker-shop-image {
+    height: 145px;
+  }
+}
+</style>
+
 </head>
 
 <body id="top">
@@ -1229,6 +1345,27 @@
     aria-label="Jeda berita">
     →
   </button>
+</section>
+
+<!-- =========================================================
+     ANKER SHOP RSS FEED V1
+     ========================================================= -->
+<section class="anker-shop-section" id="ankerShopSection">
+  <div class="anker-shop-title">
+    ANKER SHOP
+  </div>
+
+  <div class="anker-shop-feed">
+    <div
+      class="anker-shop-track"
+      id="ankerShopTrack"
+      aria-live="polite"
+    >
+      <div class="anker-shop-status">
+        Memuat produk ANKER SHOP...
+      </div>
+    </div>
+  </div>
 </section>
 
 
@@ -1547,6 +1684,188 @@
 })();
 </script>
 
+
+
+
+
+
+<script>
+/* =========================================================
+   ANKER SHOP RSS FEED V1
+   Source: bjards.blogspot.com / label Affiliate
+   ========================================================= */
+(function () {
+  const RSS_URL =
+    "/api/shop-feed";
+
+  const track = document.getElementById("ankerShopTrack");
+
+  if (!track) return;
+
+  function escapeHTML(value) {
+    const div = document.createElement("div");
+    div.textContent = value || "";
+    return div.innerHTML;
+  }
+
+  function getText(parent, tag) {
+    const node = parent.getElementsByTagName(tag)[0];
+    return node ? (node.textContent || "").trim() : "";
+  }
+
+  function getImage(item) {
+    const mediaContent =
+      item.getElementsByTagNameNS(
+        "http://search.yahoo.com/mrss/",
+        "content"
+      )[0];
+
+    if (mediaContent) {
+      const url = mediaContent.getAttribute("url");
+      if (url) return url;
+    }
+
+    const mediaThumbnail =
+      item.getElementsByTagNameNS(
+        "http://search.yahoo.com/mrss/",
+        "thumbnail"
+      )[0];
+
+    if (mediaThumbnail) {
+      const url = mediaThumbnail.getAttribute("url");
+      if (url) return url;
+    }
+
+    const enclosure = item.getElementsByTagName("enclosure")[0];
+
+    if (enclosure) {
+      const url = enclosure.getAttribute("url");
+      if (url) return url;
+    }
+
+    const description = getText(item, "description");
+
+    const match = description.match(
+      /<img[^>]+src=["']([^"']+)["']/i
+    );
+
+    return match ? match[1] : "";
+  }
+
+  function buildCard(item) {
+    const title = getText(item, "title");
+    const link = getText(item, "link");
+    const image = getImage(item);
+
+    if (!title || !link) return null;
+
+    const card = document.createElement("a");
+    card.className = "anker-shop-card";
+    card.href = link;
+    card.target = "_blank";
+    card.rel = "noopener noreferrer";
+
+    const safeTitle = escapeHTML(title);
+    const safeImage = escapeHTML(image);
+
+    card.innerHTML =
+      (safeImage
+        ? '<img class="anker-shop-image" src="' +
+          safeImage +
+          '" alt="' +
+          safeTitle +
+          '" loading="lazy">'
+        : "") +
+      '<div class="anker-shop-info">' +
+        '<div class="anker-shop-name">' +
+          safeTitle +
+        '</div>' +
+        '<div class="anker-shop-source">' +
+          'ANKER SHOP • AFFILIATE' +
+        '</div>' +
+      '</div>';
+
+    return card;
+  }
+
+  async function loadShopFeed() {
+    try {
+      const response = await fetch(RSS_URL, {
+        cache: "no-store"
+      });
+
+      if (!response.ok) {
+        throw new Error("HTTP " + response.status);
+      }
+
+      const xmlText = await response.text();
+
+      const parser = new DOMParser();
+      const xml = parser.parseFromString(
+        xmlText,
+        "application/xml"
+      );
+
+      if (xml.querySelector("parsererror")) {
+        throw new Error("RSS XML tidak valid");
+      }
+
+      const items = Array.from(
+        xml.getElementsByTagName("item")
+      ).slice(0, 10);
+
+      if (!items.length) {
+        throw new Error("Tidak ada produk Affiliate");
+      }
+
+      const fragment = document.createDocumentFragment();
+
+      items.forEach(function (item) {
+        const card = buildCard(item);
+        if (card) fragment.appendChild(card);
+      });
+
+      if (!fragment.childNodes.length) {
+        throw new Error("Produk tidak dapat dibuat");
+      }
+
+      /*
+       * Duplicate cards agar marquee dapat berjalan
+       * secara kontinu.
+       */
+      const duplicate = fragment.cloneNode(true);
+
+      track.innerHTML = "";
+      track.appendChild(fragment);
+      track.appendChild(duplicate);
+
+      console.log(
+        "[ANKER SHOP] RSS loaded:",
+        items.length,
+        "products"
+      );
+
+    } catch (error) {
+      console.warn(
+        "[ANKER SHOP] RSS gagal:",
+        error
+      );
+
+      track.innerHTML =
+        '<div class="anker-shop-status">' +
+        'ANKER SHOP sedang tidak dapat memuat feed.' +
+        '</div>';
+    }
+  }
+
+  loadShopFeed();
+
+  setInterval(
+    loadShopFeed,
+    10 * 60 * 1000
+  );
+})();
+</script>
 
 <script>
 (function () {
