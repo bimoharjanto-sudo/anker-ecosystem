@@ -1714,48 +1714,15 @@
   }
 
   function getImage(item) {
-    const mediaContent =
-      item.getElementsByTagNameNS(
-        "http://search.yahoo.com/mrss/",
-        "content"
-      )[0];
-
-    if (mediaContent) {
-      const url = mediaContent.getAttribute("url");
-      if (url) return url;
-    }
-
-    const mediaThumbnail =
-      item.getElementsByTagNameNS(
-        "http://search.yahoo.com/mrss/",
-        "thumbnail"
-      )[0];
-
-    if (mediaThumbnail) {
-      const url = mediaThumbnail.getAttribute("url");
-      if (url) return url;
-    }
-
-    const enclosure = item.getElementsByTagName("enclosure")[0];
-
-    if (enclosure) {
-      const url = enclosure.getAttribute("url");
-      if (url) return url;
-    }
-
-    const description = getText(item, "description");
-
-    const match = description.match(
-      /<img[^>]+src=["']([^"']+)["']/i
-    );
-
-    return match ? match[1] : "";
+    return item && typeof item.image === "string"
+      ? item.image.trim()
+      : "";
   }
 
   function buildCard(item) {
-    const title = getText(item, "title");
-    const link = getText(item, "link");
-    const image = getImage(item);
+    const title = item && item.title ? String(item.title).trim() : "";
+    const link = item && item.link ? String(item.link).trim() : "";
+    const image = item && item.image ? String(item.image).trim() : "";
 
     if (!title || !link) return null;
 
