@@ -1798,21 +1798,10 @@
         throw new Error("HTTP " + response.status);
       }
 
-      const xmlText = await response.text();
-
-      const parser = new DOMParser();
-      const xml = parser.parseFromString(
-        xmlText,
-        "application/xml"
-      );
-
-      if (xml.querySelector("parsererror")) {
-        throw new Error("RSS XML tidak valid");
-      }
-
-      const items = Array.from(
-        xml.getElementsByTagName("item")
-      ).slice(0, 10);
+      const data = await response.json();
+      const items = Array.isArray(data.items)
+        ? data.items.slice(0, 10)
+        : [];
 
       if (!items.length) {
         throw new Error("Tidak ada produk Affiliate");
@@ -1840,14 +1829,14 @@
       track.appendChild(duplicate);
 
       console.log(
-        "[ANKER SHOP] RSS loaded:",
+        "[ANKER SHOP] Feed loaded:",
         items.length,
         "products"
       );
 
     } catch (error) {
       console.warn(
-        "[ANKER SHOP] RSS gagal:",
+        "[ANKER SHOP] Feed gagal:",
         error
       );
 
