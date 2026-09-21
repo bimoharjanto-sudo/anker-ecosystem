@@ -957,12 +957,8 @@
   align-items: center;
   width: max-content;
   white-space: nowrap;
-  animation: ankerNewsMove 32s linear infinite;
+  animation: ankerNewsMove 32s linear infinite !important;
   will-change: transform;
-}
-
-.news-ticker:hover .news-track {
-  animation-play-state: paused;
 }
 
 .news-item {
@@ -1034,8 +1030,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .news-track {
-    animation: none;
-    transform: none;
+    animation: ankerNewsMove 32s linear infinite !important;
+    transform: translateX(0);
   }
 
   .news-live-dot {
