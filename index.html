@@ -1547,5 +1547,92 @@
 })();
 </script>
 
+
+<script>
+(function () {
+  const API_URL =
+    "https://anker-news-api.bimoharjanto.workers.dev/api/news";
+
+  const track = document.getElementById("ankerNewsTrack");
+
+  if (!track) return;
+
+  function escapeHTML(value) {
+    const div = document.createElement("div");
+    div.textContent = value || "";
+    return div.innerHTML;
+  }
+
+  function buildNewsItem(item) {
+    const div = document.createElement("div");
+    div.className = "news-item";
+
+    div.innerHTML =
+      '<strong>ANTARA</strong>' +
+      '<span>' + escapeHTML(item.title) + '</span>' +
+      '<span class="news-separator">◆</span>';
+
+    return div;
+  }
+
+  async function loadAntaraNews() {
+    try {
+      const response = await fetch(API_URL, {
+        cache: "no-store"
+      });
+
+      if (!response.ok) {
+        throw new Error("HTTP " + response.status);
+      }
+
+      const data = await response.json();
+
+      if (
+        !data.ok ||
+        !Array.isArray(data.items) ||
+        data.items.length === 0
+      ) {
+        throw new Error("Data berita kosong");
+      }
+
+      const fragment = document.createDocumentFragment();
+
+      data.items.forEach(function (item) {
+        fragment.appendChild(buildNewsItem(item));
+      });
+
+      const duplicate = document.createDocumentFragment();
+
+      data.items.forEach(function (item) {
+        const clone = buildNewsItem(item);
+        clone.setAttribute("aria-hidden", "true");
+        duplicate.appendChild(clone);
+      });
+
+      track.innerHTML = "";
+      track.appendChild(fragment);
+      track.appendChild(duplicate);
+
+
+      console.log(
+        "[ANKER NEWS] ANTARA loaded:",
+        data.items.length,
+        "items"
+      );
+
+    } catch (error) {
+      console.warn(
+        "[ANKER NEWS] ANTARA API gagal. Menggunakan berita internal.",
+        error
+      );
+    }
+  }
+
+  loadAntaraNews();
+
+  setInterval(loadAntaraNews, 5 * 60 * 1000);
+})();
+</script>
+
 </body>
 </html>
