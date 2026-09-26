@@ -862,6 +862,116 @@
   cursor: default;
 }
 
+
+/* ================================
+   ANKER BOT WELCOME V1
+   ================================ */
+.anker-bot-welcome {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background:
+    radial-gradient(circle at center,
+      rgba(145,20,35,.16) 0%,
+      rgba(8,8,12,.97) 52%,
+      #050507 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  opacity: 1;
+  visibility: visible;
+  transition: opacity .65s ease, visibility .65s ease;
+}
+
+.anker-bot-welcome.hide {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.anker-bot-welcome-inner {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  animation: ankerWelcomeIn .7s ease;
+}
+
+.anker-bot-welcome-icon {
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+  background: linear-gradient(145deg,#191921,#08080c);
+  border: 1px solid rgba(255,255,255,.18);
+  box-shadow: 0 18px 60px rgba(0,0,0,.55);
+}
+
+.anker-bot-welcome-name {
+  color: #fff;
+  font-size: 25px;
+  font-weight: 800;
+  letter-spacing: .14em;
+}
+
+.anker-bot-welcome-sub {
+  color: #8f8f98;
+  font-size: 12px;
+  letter-spacing: .08em;
+}
+
+.anker-bot-touch {
+  margin-top: 18px;
+  color: #fff;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: .22em;
+  animation: ankerTouchPulse 1.5s ease-in-out infinite;
+}
+
+.anker-bot-bubble.touch-me {
+  animation: ankerBubblePulse 1.7s ease-in-out infinite;
+}
+
+@keyframes ankerWelcomeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes ankerTouchPulse {
+  0%, 100% { opacity: .35; transform: scale(.98); }
+  50% { opacity: 1; transform: scale(1.04); }
+}
+
+@keyframes ankerBubblePulse {
+  0%, 100% {
+    opacity: .65;
+    box-shadow: 0 12px 35px rgba(0,0,0,.45);
+  }
+  50% {
+    opacity: 1;
+    box-shadow: 0 12px 40px rgba(157,29,46,.32);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .anker-bot-welcome-inner,
+  .anker-bot-touch,
+  .anker-bot-bubble.touch-me {
+    animation: none;
+  }
+}
+
 @media (max-width: 600px) {
   .anker-receptionist {
     right: 14px;
@@ -1323,6 +1433,18 @@
 </head>
 
 <body id="top">
+
+<!-- ANKER BOT WELCOME V1 -->
+<div class="anker-bot-welcome" id="anker-bot-welcome" aria-label="ANKER BOT">
+  <div class="anker-bot-welcome-inner">
+    <div class="anker-bot-welcome-icon">🤖</div>
+    <div class="anker-bot-welcome-name">ANKER BOT</div>
+    <div class="anker-bot-welcome-sub">DIGITAL RECEPTIONIST • ONLINE</div>
+    <div class="anker-bot-touch">TOUCH ME</div>
+  </div>
+</div>
+
+
 
   <header class="site-header">
     <div class="header-inner">
@@ -2100,6 +2222,21 @@
 
   setInterval(loadAntaraNews, 5 * 60 * 1000);
 })();
+
+
+// ANKER BOT WELCOME V1
+(() => {
+  const welcome = document.getElementById("anker-bot-welcome");
+  const bubble = document.getElementById("anker-bot-bubble");
+
+  if (!welcome || !bubble) return;
+
+  setTimeout(() => {
+    welcome.classList.add("hide");
+    bubble.classList.add("touch-me");
+  }, 2500);
+})();
+
 </script>
 
 </body>

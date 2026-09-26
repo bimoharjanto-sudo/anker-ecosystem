@@ -259,6 +259,40 @@
       }
     }
 
+/* ANKER RADIO SEARCH V1.2 */
+.radio-search {
+  margin: 18px 0 14px;
+}
+
+.radio-search label {
+  display: block;
+  margin-bottom: 7px;
+  color: #9a9aa3;
+  font-size: 12px;
+  letter-spacing: .06em;
+}
+
+.radio-search input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 12px 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 12px;
+  background: rgba(255,255,255,.04);
+  color: #fff;
+  outline: none;
+  font: inherit;
+}
+
+.radio-search input::placeholder {
+  color: #777780;
+}
+
+.radio-search input:focus {
+  border-color: rgba(190,30,45,.75);
+  box-shadow: 0 0 0 3px rgba(190,30,45,.10);
+}
+
 .station-list {
   display: grid;
   gap: 10px;
@@ -368,6 +402,18 @@ audio {
       Memuat stasiun radio Indonesia...
     </p>
 
+    <!-- ANKER RADIO SEARCH V1.2 -->
+    <div class="radio-search">
+      <label for="stationSearch">Cari stasiun radio</label>
+      <input
+        id="stationSearch"
+        type="search"
+        placeholder="Nama stasiun, kota, genre..."
+        autocomplete="off"
+        spellcheck="false"
+      >
+    </div>
+
     <div id="stationList" class="station-list" aria-live="polite"></div>
 
     <div class="player">
@@ -409,6 +455,9 @@ audio {
   };
 
   let currentCategory = "indonesia";
+  let currentStations = [];
+
+
 
   const list = document.getElementById("stationList");
   const message = document.getElementById("radioMessage");
@@ -416,6 +465,9 @@ audio {
   const nowPlaying = document.getElementById("nowPlaying");
   const status = document.getElementById("radioStatus");
   const liveDot = document.getElementById("liveDot");
+  const stationSearch = document.getElementById("stationSearch");
+
+
 
   function setStatus(text) {
     status.textContent = text;
@@ -470,7 +522,56 @@ audio {
     }[char]));
   }
 
+  function renderStations(stations) {
+    list.replaceChildren(...stations.map(createStation));
+
+    if (!stations.length) {
+      message.textContent = "Tidak ada stasiun yang cocok.";
+      return;
+    }
+
+    message.textContent =
+      stations.length + " stasiun " +
+      CATEGORY_CONFIG[currentCategory].label +
+      " cocok.";
+  }
+
+  function filterStations() {
+    const query = stationSearch.value.trim().toLowerCase();
+
+    if (!query) {
+      renderStations(currentStations);
+
+      message.textContent =
+        currentStations.length + " stasiun " +
+        CATEGORY_CONFIG[currentCategory].label +
+        " tersedia.";
+
+      return;
+    }
+
+    const filtered = currentStations.filter(station => {
+      const haystack = [
+        station.name,
+        station.state,
+        station.tags,
+        station.codec,
+        station.country,
+        station.language
+      ]
+        .filter(Boolean)
+        .join(" ")
+        .toLowerCase();
+
+      return haystack.includes(query);
+    });
+
+    renderStations(filtered);
+  }
+
   async function loadStations(category = currentCategory) {
+
+
     const config = CATEGORY_CONFIG[category];
 
     if (!config) {
@@ -504,6 +605,7 @@ audio {
       );
 
       if (!playable.length) {
+        currentStations = [];
         message.textContent =
           "Belum ada stream HTTPS yang tersedia untuk " +
           config.label + ".";
@@ -511,7 +613,8 @@ audio {
         return;
       }
 
-      list.replaceChildren(...playable.map(createStation));
+      currentStations = playable;
+      renderStations(playable);
 
       message.textContent =
         playable.length + " stasiun " +
@@ -559,9 +662,12 @@ audio {
         item.classList.toggle("active", item === tab);
       });
 
+      stationSearch.value = "";
       loadStations(tab.dataset.category);
     });
   });
+
+  stationSearch.addEventListener("input", filterStations);
 
   loadStations();
 })();
