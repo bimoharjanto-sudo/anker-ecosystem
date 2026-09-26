@@ -478,6 +478,29 @@
       bottom:-8px;
       transform:translateX(-50%) rotate(-7deg);
     }
+    .footer-links{
+      justify-self:center;
+      display:flex;
+      flex-wrap:wrap;
+      justify-content:center;
+      align-items:center;
+      gap:8px 14px;
+      margin-top:4px;
+      max-width:520px;
+    }
+    .footer-links a{
+      color:rgba(255,255,255,.58);
+      text-decoration:none;
+      font-size:11px;
+      letter-spacing:.5px;
+      transition:.2s;
+    }
+    .footer-links a:hover{
+      color:#fff;
+      text-decoration:underline;
+      text-underline-offset:3px;
+    }
+
     .socials{
       justify-self:end;
       display:flex;
@@ -572,7 +595,7 @@
         justify-items:center;
         gap:20px;
       }
-      .footer-brand,.footer-script,.socials{justify-self:center}
+      .footer-brand,.footer-script,.footer-links,.socials{justify-self:center}
       .footer-brand .brand{font-size:14px}
     }
 
@@ -1789,6 +1812,15 @@
       </a>
 
       <div class="footer-script">One Hub • Many Stories</div>
+
+      <nav class="footer-links" aria-label="Informasi ANKER">
+        <a href="/about.html">About</a>
+        <a href="/contact.html">Contact</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/terms.html">Terms</a>
+        <a href="/disclaimer.html">Disclaimer</a>
+        <a href="/affiliate-disclosure.html">Affiliate Disclosure</a>
+      </nav>
 
       <div class="socials" aria-label="Social media">
         <a class="social" href="https://www.youtube.com/@ankerbelloktv" target="_blank" rel="noopener" aria-label="YouTube">▶</a>
