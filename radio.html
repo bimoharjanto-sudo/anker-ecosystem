@@ -258,7 +258,69 @@
         letter-spacing:2px;
       }
     }
-  </style>
+
+.station-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.station {
+  width: 100%;
+  text-align: left;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 14px;
+  padding: 14px 16px;
+  background: rgba(255,255,255,.04);
+  color: inherit;
+  cursor: pointer;
+}
+
+.station:hover {
+  background: rgba(255,255,255,.08);
+}
+
+.station strong,
+.station span {
+  display: block;
+}
+
+.station span {
+  margin-top: 5px;
+  opacity: .65;
+  font-size: .82rem;
+}
+
+.player {
+  margin-top: 24px;
+}
+
+.now-playing {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.live-dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background: #666;
+  display: inline-block;
+}
+
+.live-dot.live {
+  background: #19d36b;
+  box-shadow: 0 0 10px rgba(25,211,107,.7);
+}
+
+audio {
+  width: 100%;
+}
+
+</style>
 </head>
 
 <body>
@@ -299,20 +361,151 @@
 
     <h2>Radio Directory</h2>
 
-    <p>
-      Pilih stasiun radio untuk mulai mendengarkan.
-      Daftar stasiun akan ditambahkan setelah sumber siaran
-      diverifikasi dan tersedia secara stabil.
+    <p id="radioMessage">
+      Memuat stasiun radio Indonesia...
     </p>
 
-    <div class="status">RADIO DIRECTORY • V1</div>
+    <div id="stationList" class="station-list" aria-live="polite"></div>
+
+    <div class="player">
+      <div class="now-playing">
+        <span class="live-dot" id="liveDot"></span>
+        <span id="nowPlaying">Belum ada stasiun dipilih</span>
+      </div>
+
+      <audio id="radioPlayer" controls preload="none"></audio>
+
+      <div class="status" id="radioStatus">RADIO DIRECTORY • V1 • READY</div>
+    </div>
   </section>
 
   <div class="info">
-    ANKER RADIO dibangun sebagai bagian dari ANKER ONE HUB.
-    Tahap pertama berfokus pada fondasi dan pengalaman pengguna;
-    sumber siaran akan ditambahkan secara bertahap.
+    ANKER RADIO menggunakan Radio Browser sebagai direktori
+    stasiun. Audio diputar langsung dari sumber stream stasiun.
   </div>
+
+
+<script>
+(() => {
+  const API =
+    "https://de1.api.radio-browser.info/json/stations/search" +
+    "?countrycode=ID&hidebroken=true&order=votes&reverse=true&limit=50";
+
+  const list = document.getElementById("stationList");
+  const message = document.getElementById("radioMessage");
+  const player = document.getElementById("radioPlayer");
+  const nowPlaying = document.getElementById("nowPlaying");
+  const status = document.getElementById("radioStatus");
+  const liveDot = document.getElementById("liveDot");
+
+  function setStatus(text) {
+    status.textContent = text;
+  }
+
+  function selectStation(station) {
+    if (!station.url_resolved || !station.url_resolved.startsWith("https://")) {
+      setStatus("STREAM TIDAK AMAN UNTUK HTTPS");
+      return;
+    }
+
+    player.pause();
+    player.src = station.url_resolved;
+    player.load();
+
+    nowPlaying.textContent = station.name || "Unknown Station";
+    setStatus("READY • " + (station.codec || "STREAM"));
+
+    player.play().then(() => {
+      setStatus("LIVE • " + (station.codec || "STREAM"));
+      liveDot.classList.add("live");
+    }).catch(() => {
+      setStatus("READY • Tekan PLAY untuk mulai");
+      liveDot.classList.remove("live");
+    });
+  }
+
+  function createStation(station) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "station";
+    button.innerHTML = `
+      <strong>${escapeHtml(station.name || "Unknown Station")}</strong>
+      <span>${escapeHtml(
+        [station.state, station.tags, station.codec]
+          .filter(Boolean)
+          .join(" • ")
+      )}</span>
+    `;
+
+    button.addEventListener("click", () => selectStation(station));
+    return button;
+  }
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, char => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#039;"
+    }[char]));
+  }
+
+  async function loadStations() {
+    try {
+      const response = await fetch(API, {
+        headers: { "Accept": "application/json" }
+      });
+
+      if (!response.ok) {
+        throw new Error("API HTTP " + response.status);
+      }
+
+      const stations = await response.json();
+
+      const playable = stations.filter(station =>
+        station.lastcheckok === 1 &&
+        station.url_resolved &&
+        station.url_resolved.startsWith("https://")
+      );
+
+      if (!playable.length) {
+        message.textContent =
+          "Belum ada stream HTTPS yang tersedia dari hasil pencarian.";
+        setStatus("NO HTTPS STREAM");
+        return;
+      }
+
+      list.replaceChildren(...playable.map(createStation));
+      message.textContent =
+        playable.length + " stasiun Indonesia tersedia.";
+      setStatus("RADIO DIRECTORY • " + playable.length + " STATIONS");
+
+    } catch (error) {
+      console.error(error);
+      message.textContent =
+        "Gagal memuat direktori radio. Coba lagi nanti.";
+      setStatus("DIRECTORY ERROR");
+    }
+  }
+
+  player.addEventListener("playing", () => {
+    setStatus("LIVE • " + (player.src ? "STREAM ACTIVE" : "READY"));
+    liveDot.classList.add("live");
+  });
+
+  player.addEventListener("pause", () => {
+    liveDot.classList.remove("live");
+  });
+
+  player.addEventListener("error", () => {
+    liveDot.classList.remove("live");
+    setStatus("STREAM ERROR • Pilih stasiun lain");
+  });
+
+  loadStations();
+})();
+</script>
 
 </main>
 
