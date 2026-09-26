@@ -1166,6 +1166,157 @@
 }
 </style>
 
+<style>
+/* =========================================================
+   ANKER RADIO V1
+   Front-page feature / monetization-ready foundation
+   ========================================================= */
+.anker-radio-section {
+  margin: 22px 0;
+  width: 100%;
+}
+
+.anker-radio-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px 22px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(255,255,255,.08), transparent 34%),
+    rgba(255,255,255,.035);
+  color: inherit;
+  text-decoration: none;
+  transition: transform .2s ease, border-color .2s ease;
+}
+
+.anker-radio-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,.3);
+}
+
+.anker-radio-main {
+  min-width: 0;
+  flex: 1 1 auto;
+  position: relative;
+  z-index: 2;
+}
+
+.anker-radio-image {
+  flex: 0 0 170px;
+  width: 170px;
+  height: 120px;
+  overflow: hidden;
+  border-radius: 14px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.25);
+  position: relative;
+  z-index: 1;
+}
+
+.anker-radio-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .9;
+  filter: saturate(.82) contrast(1.05);
+}
+
+.anker-radio-label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  margin-bottom: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  opacity: .72;
+}
+
+.anker-radio-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 0 4px rgba(255,255,255,.06);
+}
+
+.anker-radio-title {
+  margin: 0;
+  font-size: clamp(20px, 4vw, 28px);
+  font-weight: 900;
+  letter-spacing: .3px;
+}
+
+.anker-radio-text {
+  margin: 6px 0 0;
+  max-width: 620px;
+  font-size: 13px;
+  line-height: 1.5;
+  opacity: .68;
+}
+
+.anker-radio-action {
+  flex: 0 0 auto;
+  padding: 10px 15px;
+  border: 1px solid rgba(255,255,255,.2);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .7px;
+  white-space: nowrap;
+}
+
+@media (max-width: 600px) {
+  .anker-radio-card {
+    align-items: flex-start;
+    padding: 17px;
+    gap: 12px;
+  }
+
+  .anker-radio-main {
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-right: 4px;
+  }
+
+  .anker-radio-image {
+    flex: 0 0 105px;
+    width: 105px;
+    height: 82px;
+    border-radius: 12px;
+  }
+
+  .anker-radio-title {
+    font-size: 20px;
+    line-height: 1.12;
+    letter-spacing: 0;
+    max-width: 260px;
+  }
+
+  .anker-radio-text {
+    font-size: 12px;
+    line-height: 1.45;
+    max-width: 100%;
+  }
+
+  .anker-radio-action {
+    position: absolute;
+    top: 16px;
+    right: 132px;
+    z-index: 4;
+    margin: 0;
+    padding: 8px 12px;
+    font-size: 11px;
+  }
+}
+</style>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Javanese&display=swap" rel="stylesheet">
@@ -1359,6 +1510,34 @@
     aria-label="Jeda berita">
     →
   </button>
+</section>
+
+<!-- =========================================================
+     ANKER RADIO V1
+     Front-page feature / radio entry
+     ========================================================= -->
+<section class="anker-radio-section" id="ankerRadioSection" aria-label="ANKER Radio">
+  <a class="anker-radio-card" href="/radio.html">
+    <div class="anker-radio-main">
+      <div class="anker-radio-label">
+        <span class="anker-radio-dot" aria-hidden="true"></span>
+        <span>ANKER RADIO</span>
+      </div>
+
+      <h2 class="anker-radio-title">Listen • Discover • Connect</h2>
+
+      <p class="anker-radio-text">
+        Dengarkan radio, temukan suara baru, dan jelajahi siaran dari Indonesia
+        dan dunia dalam satu tempat.
+      </p>
+    </div>
+
+    <span class="anker-radio-action">OPEN →</span>
+
+    <div class="anker-radio-image" aria-hidden="true">
+      <img src="/anker_radio_vintage.png" alt="" loading="lazy">
+    </div>
+  </a>
 </section>
 
 <!-- =========================================================
