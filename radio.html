@@ -826,6 +826,35 @@ audio {
     });
   }
 
+  function stationShareUrl(station) {
+    if (!station) {
+      return window.location.href;
+    }
+
+    const id = stationId(station);
+
+    const url =
+      new URL(
+        "/radio",
+        window.location.origin
+      );
+
+    url.searchParams.set(
+      "station",
+      id
+    );
+
+    if (currentCategory &&
+        currentCategory !== "favorites") {
+      url.searchParams.set(
+        "category",
+        currentCategory
+      );
+    }
+
+    return url.toString();
+  }
+
   async function shareStation(station) {
     if (!station) {
       return;
@@ -836,30 +865,202 @@ audio {
       (station.name || "radio station") +
       " di ANKER RADIO";
 
+    const shareUrl =
+      stationShareUrl(station);
+
     try {
       if (navigator.share) {
         await navigator.share({
-          title: station.name || "ANKER RADIO",
+          title:
+            station.name ||
+            "ANKER RADIO",
           text,
-          url: window.location.href
+          url: shareUrl
         });
 
-        setStatus("SHARED • " + (station.name || "STATION"));
+        setStatus(
+          "SHARED • " +
+          (station.name || "STATION")
+        );
       } else {
         await navigator.clipboard.writeText(
-          window.location.href
+          shareUrl
         );
 
         setStatus("LINK COPIED");
       }
     } catch (error) {
-      if (error && error.name === "AbortError") {
+      if (
+        error &&
+        error.name === "AbortError"
+      ) {
         return;
       }
 
       console.error(error);
-      setStatus("SHARE TIDAK TERSEDIA");
+      setStatus(
+        "SHARE TIDAK TERSEDIA"
+      );
     }
+  }
+
+  function getSharedParams() {
+    try {
+      const params =
+        new URLSearchParams(
+          window.location.search
+        );
+
+      return {
+        station: (
+          params.get("station") || ""
+        ).trim(),
+
+        category: (
+          params.get("category") || ""
+        ).trim()
+      };
+    } catch (error) {
+      console.warn(
+        "Shared station URL:",
+        error
+      );
+
+      return {
+        station: "",
+        category: ""
+      };
+    }
+  }
+
+  async function tryOpenSharedStation(
+    stations
+  ) {
+    const shared =
+      getSharedParams();
+
+    if (!shared.station) {
+      return false;
+    }
+
+    if (Array.isArray(stations)) {
+      const station =
+        stations.find(
+          item =>
+            stationId(item) ===
+            shared.station
+        );
+
+      if (station) {
+        selectStation(station);
+
+        setStatus(
+          "SHARED • " +
+          (station.name || "STATION")
+        );
+
+        return true;
+      }
+    }
+
+    setStatus(
+      "LOADING SHARED STATION"
+    );
+
+    try {
+      const response =
+        await fetch(
+          API_BASE.replace(
+            "/stations/search",
+            "/stations/byuuid/"
+          ) +
+          encodeURIComponent(
+            shared.station
+          ),
+          {
+            headers: {
+              "Accept": "application/json"
+            }
+          }
+        );
+
+      if (!response.ok) {
+        throw new Error(
+          "Shared station HTTP " +
+          response.status
+        );
+      }
+
+      const result =
+        await response.json();
+
+      if (
+        !Array.isArray(result) ||
+        !result.length
+      ) {
+        throw new Error(
+          "Shared station not found"
+        );
+      }
+
+      const station =
+        result.find(
+          item =>
+            stationId(item) ===
+            shared.station
+        ) || result[0];
+
+      if (
+        !station.url_resolved ||
+        !station.url_resolved.startsWith(
+          "https://"
+        )
+      ) {
+        setStatus(
+          "SHARED STREAM TIDAK AMAN"
+        );
+
+        return false;
+      }
+
+      currentStation = station;
+      updateRadioActions();
+
+      selectStation(station);
+
+      setStatus(
+        "SHARED • " +
+        (station.name || "STATION")
+      );
+
+      return true;
+
+    } catch (error) {
+      console.warn(
+        "Shared station lookup:",
+        error
+      );
+
+      setStatus(
+        "SHARED STATION TIDAK DITEMUKAN"
+      );
+
+      return false;
+    }
+  }
+
+  function getInitialCategory() {
+    const shared =
+      getSharedParams();
+
+    if (
+      shared.category &&
+      CATEGORY_CONFIG[shared.category]
+    ) {
+      return shared.category;
+    }
+
+    return currentCategory;
   }
 
   function updateMediaSession(station) {
@@ -1140,12 +1341,19 @@ audio {
         config.label +
         " tersedia.";
 
-      setStatus(
-        config.label +
-        " • " +
-        playable.length +
-        " STATIONS"
-      );
+      const sharedOpened =
+        await tryOpenSharedStation(
+          playable
+        );
+
+      if (!sharedOpened) {
+        setStatus(
+          config.label +
+          " • " +
+          playable.length +
+          " STATIONS"
+        );
+      }
 
     } catch (error) {
       console.error(error);
@@ -1232,7 +1440,28 @@ audio {
   updateFavoriteTab();
   updateRadioActions();
   renderRecentHistory();
-  loadStations();
+
+  const initialCategory =
+    getInitialCategory();
+
+  if (
+    initialCategory &&
+    initialCategory !== currentCategory
+  ) {
+    document
+      .querySelectorAll(
+        ".tab[data-category]"
+      )
+      .forEach(tab => {
+        tab.classList.toggle(
+          "active",
+          tab.dataset.category ===
+          initialCategory
+        );
+      });
+  }
+
+  loadStations(initialCategory);
 })();
 </script>
 
