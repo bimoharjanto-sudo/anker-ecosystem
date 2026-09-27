@@ -357,6 +357,150 @@ audio {
   width: 100%;
 }
 
+
+/* ANKER RADIO UI V1 */
+.radio-actions{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+  margin:14px 0 4px;
+  flex-wrap:wrap;
+}
+
+.radio-action{
+  appearance:none;
+  border:1px solid rgba(255,255,255,.13);
+  background:rgba(255,255,255,.035);
+  color:rgba(255,255,255,.78);
+  border-radius:999px;
+  padding:9px 15px;
+  font:inherit;
+  font-size:12px;
+  letter-spacing:.3px;
+  cursor:pointer;
+  transition:.2s ease;
+}
+
+.radio-action:disabled{
+  opacity:.38;
+  cursor:not-allowed;
+}
+
+.radio-action.is-favorite{
+  color:#fff;
+  border-color:rgba(255,255,255,.30);
+  background:rgba(255,255,255,.09);
+}
+
+.recent-box{
+  margin-top:18px;
+  padding-top:15px;
+  border-top:1px solid rgba(255,255,255,.08);
+}
+
+.recent-title{
+  margin-bottom:9px;
+  color:rgba(255,255,255,.62);
+  font-size:11px;
+  letter-spacing:1.2px;
+  text-transform:uppercase;
+}
+
+.recent-list{
+  display:flex;
+  flex-direction:column;
+  gap:7px;
+}
+
+.recent-item{
+  width:100%;
+  box-sizing:border-box;
+  border:1px solid rgba(255,255,255,.07);
+  background:rgba(255,255,255,.025);
+  color:rgba(255,255,255,.78);
+  border-radius:12px;
+  padding:9px 11px;
+  text-align:left;
+  cursor:pointer;
+}
+
+.recent-name{
+  display:block;
+  font-size:12px;
+  font-weight:600;
+  line-height:1.35;
+}
+
+.recent-meta{
+  display:block;
+  margin-top:3px;
+  color:rgba(255,255,255,.42);
+  font-size:10px;
+}
+
+.recent-empty{
+  color:rgba(255,255,255,.32);
+  font-size:11px;
+  padding:4px 0;
+}
+
+@media (max-width:600px){
+  .player{
+    margin-top:20px;
+  }
+
+  .now-playing{
+    gap:7px;
+    margin-bottom:10px;
+    font-size:13px;
+    line-height:1.4;
+  }
+
+  .live-dot{
+    width:8px;
+    height:8px;
+    min-width:8px;
+  }
+
+  audio{
+    width:100%;
+    max-width:100%;
+  }
+
+  .radio-actions{
+    width:100%;
+    gap:8px;
+    margin:12px 0 4px;
+  }
+
+  .radio-action{
+    flex:1 1 0;
+    min-width:0;
+    padding:9px 10px;
+    font-size:12px;
+    white-space:nowrap;
+  }
+
+  .recent-box{
+    margin-top:16px;
+    padding-top:13px;
+  }
+
+  .recent-item{
+    padding:9px 10px;
+  }
+
+  .recent-name{
+    font-size:12px;
+    line-height:1.4;
+  }
+
+  .recent-meta{
+    font-size:10px;
+  }
+}
+
 </style>
 </head>
 
@@ -424,7 +568,28 @@ audio {
 
       <audio id="radioPlayer" controls preload="none"></audio>
 
+      <div class="radio-actions" aria-label="Radio actions">
+        <button
+          type="button"
+          id="favoriteBtn"
+          class="radio-action"
+          disabled
+        >♡ Favorite</button>
+
+        <button
+          type="button"
+          id="shareBtn"
+          class="radio-action"
+          disabled
+        >↗ Share</button>
+      </div>
+
       <div class="status" id="radioStatus">Indonesia • READY</div>
+
+      <div class="recent-box">
+        <div class="recent-title">Recently Played</div>
+        <div id="recentList" class="recent-list"></div>
+      </div>
     </div>
   </section>
 
@@ -442,22 +607,24 @@ audio {
   const CATEGORY_CONFIG = {
     indonesia: {
       label: "Indonesia",
-      params: "countrycode=ID&hidebroken=true&order=votes&reverse=true&limit=50"
+      params: "countrycode=ID&hidebroken=true&order=votes&reverse=true&limit=100"
     },
     world: {
       label: "World",
-      params: "hidebroken=true&order=votes&reverse=true&limit=50"
+      params: "hidebroken=true&order=votes&reverse=true&limit=100"
     },
     music: {
       label: "Music",
-      params: "tag=music&hidebroken=true&order=votes&reverse=true&limit=50"
+      params: "tag=music&hidebroken=true&order=votes&reverse=true&limit=100"
     }
   };
 
+  const FAVORITES_KEY = "anker_radio_favorites_v1";
+  const HISTORY_KEY = "anker_radio_history_v1";
+
   let currentCategory = "indonesia";
   let currentStations = [];
-
-
+  let currentStation = null;
 
   const list = document.getElementById("stationList");
   const message = document.getElementById("radioMessage");
@@ -467,112 +634,440 @@ audio {
   const liveDot = document.getElementById("liveDot");
   const stationSearch = document.getElementById("stationSearch");
 
-
+  const favoritesTab =
+    document.querySelector('.tab[data-category="favorites"]');
 
   function setStatus(text) {
     status.textContent = text;
   }
 
+  function getFavorites() {
+    try {
+      return JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]");
+    } catch {
+      return [];
+    }
+  }
+
+  function saveFavorites(items) {
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(items));
+  }
+
+  function getHistory() {
+    try {
+      return JSON.parse(localStorage.getItem(HISTORY_KEY) || "[]");
+    } catch {
+      return [];
+    }
+  }
+
+  function saveHistory(items) {
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(items));
+  }
+
+  function stationId(station) {
+    return (
+      station.stationuuid ||
+      station.url_resolved ||
+      station.name ||
+      "unknown"
+    );
+  }
+
+  function isFavorite(station) {
+    const id = stationId(station);
+    return getFavorites().some(item => stationId(item) === id);
+  }
+
+  function toggleFavorite(station) {
+    const favorites = getFavorites();
+    const id = stationId(station);
+
+    const index = favorites.findIndex(
+      item => stationId(item) === id
+    );
+
+    if (index >= 0) {
+      favorites.splice(index, 1);
+      setStatus("REMOVED FROM FAVORITES");
+    } else {
+      favorites.unshift(station);
+      setStatus("ADDED TO FAVORITES");
+    }
+
+    saveFavorites(favorites);
+    updateFavoriteTab();
+
+    if (currentCategory === "favorites") {
+      renderStations(getFavorites());
+    }
+  }
+
+  function updateFavoriteTab() {
+    if (!favoritesTab) {
+      return;
+    }
+
+    const count = getFavorites().length;
+
+    favoritesTab.disabled = false;
+    favoritesTab.textContent =
+      count > 0 ? `Favorites (${count})` : "Favorites";
+  }
+
+  function addHistory(station) {
+    const history = getHistory();
+    const id = stationId(station);
+
+    const filtered = history.filter(
+      item => stationId(item) !== id
+    );
+
+    filtered.unshift(station);
+
+    saveHistory(filtered.slice(0, 5));
+  }
+
+
+  function updateRadioActions() {
+    const favoriteBtn = document.getElementById("favoriteBtn");
+    const shareBtn = document.getElementById("shareBtn");
+
+    if (!favoriteBtn || !shareBtn) return;
+
+    const active = !!currentStation;
+
+    favoriteBtn.disabled = !active;
+    shareBtn.disabled = !active;
+
+    if (!active) {
+      favoriteBtn.textContent = "♡ Favorite";
+      favoriteBtn.classList.remove("is-favorite");
+      return;
+    }
+
+    const favorite = isFavorite(currentStation);
+
+    favoriteBtn.textContent = favorite
+      ? "♥ Favorited"
+      : "♡ Favorite";
+
+    favoriteBtn.classList.toggle("is-favorite", favorite);
+  }
+
+  function renderRecentHistory() {
+    const box = document.getElementById("recentList");
+    if (!box) return;
+
+    const history = getHistory();
+
+    if (!history.length) {
+      box.innerHTML =
+        '<div class="recent-empty">Belum ada stasiun yang diputar.</div>';
+      return;
+    }
+
+    box.innerHTML = history
+      .slice(0, 5)
+      .map((station, index) => {
+        const name = String(station.name || "Unnamed Station")
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+
+        const meta = [
+          station.country || "",
+          station.codec || ""
+        ].filter(Boolean).join(" • ");
+
+        return `
+          <button
+            type="button"
+            class="recent-item"
+            data-recent-index="${index}"
+          >
+            <span class="recent-name">${name}</span>
+            <span class="recent-meta">${meta}</span>
+          </button>
+        `;
+      })
+      .join("");
+
+    box.querySelectorAll(".recent-item").forEach((button) => {
+      button.addEventListener("click", () => {
+        const index = Number(button.dataset.recentIndex);
+        const station = history[index];
+
+        if (station) {
+          selectStation(station);
+        }
+      });
+    });
+  }
+
+  const favoriteBtn = document.getElementById("favoriteBtn");
+  const shareBtn = document.getElementById("shareBtn");
+
+  if (favoriteBtn) {
+    favoriteBtn.addEventListener("click", () => {
+      if (!currentStation) return;
+
+      toggleFavorite(currentStation);
+      updateRadioActions();
+    });
+  }
+
+  if (shareBtn) {
+    shareBtn.addEventListener("click", () => {
+      if (currentStation) {
+        shareStation(currentStation);
+      }
+    });
+  }
+
+  async function shareStation(station) {
+    if (!station) {
+      return;
+    }
+
+    const text =
+      "Dengarkan " +
+      (station.name || "radio station") +
+      " di ANKER RADIO";
+
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: station.name || "ANKER RADIO",
+          text,
+          url: window.location.href
+        });
+
+        setStatus("SHARED • " + (station.name || "STATION"));
+      } else {
+        await navigator.clipboard.writeText(
+          window.location.href
+        );
+
+        setStatus("LINK COPIED");
+      }
+    } catch (error) {
+      if (error && error.name === "AbortError") {
+        return;
+      }
+
+      console.error(error);
+      setStatus("SHARE TIDAK TERSEDIA");
+    }
+  }
+
+  function updateMediaSession(station) {
+    if (!("mediaSession" in navigator) || !station) {
+      return;
+    }
+
+    try {
+      navigator.mediaSession.metadata =
+        new MediaMetadata({
+          title: station.name || "ANKER RADIO",
+          artist:
+            station.state ||
+            station.country ||
+            "Radio Stream",
+          album: "ANKER RADIO"
+        });
+
+      navigator.mediaSession.setActionHandler(
+        "play",
+        () => player.play()
+      );
+
+      navigator.mediaSession.setActionHandler(
+        "pause",
+        () => player.pause()
+      );
+
+      navigator.mediaSession.setActionHandler(
+        "stop",
+        () => player.pause()
+      );
+    } catch (error) {
+      console.warn("Media Session:", error);
+    }
+  }
+
   function selectStation(station) {
-    if (!station.url_resolved || !station.url_resolved.startsWith("https://")) {
+    if (
+      !station.url_resolved ||
+      !station.url_resolved.startsWith("https://")
+    ) {
       setStatus("STREAM TIDAK AMAN UNTUK HTTPS");
       return;
     }
+
+    currentStation = station;
+    updateRadioActions();
 
     player.pause();
     player.src = station.url_resolved;
     player.load();
 
-    nowPlaying.textContent = station.name || "Unknown Station";
-    setStatus("READY • " + (station.codec || "STREAM"));
+    nowPlaying.textContent =
+      station.name || "Unknown Station";
+
+    setStatus(
+      "READY • " +
+      (station.codec || "STREAM")
+    );
+
+    addHistory(station);
+    renderRecentHistory();
+    updateMediaSession(station);
 
     player.play().then(() => {
-      setStatus("LIVE • " + (station.codec || "STREAM"));
+      setStatus(
+        "LIVE • " +
+        (station.codec || "STREAM")
+      );
+
       liveDot.classList.add("live");
     }).catch(() => {
-      setStatus("READY • Tekan PLAY untuk mulai");
+      setStatus(
+        "READY • Tekan PLAY untuk mulai"
+      );
+
       liveDot.classList.remove("live");
     });
   }
 
   function createStation(station) {
     const button = document.createElement("button");
+
     button.type = "button";
     button.className = "station";
+
+    const favoriteMark =
+      isFavorite(station) ? " ★" : "";
+
     button.innerHTML = `
-      <strong>${escapeHtml(station.name || "Unknown Station")}</strong>
+      <strong>
+        ${escapeHtml(station.name || "Unknown Station")}
+        ${favoriteMark}
+      </strong>
       <span>${escapeHtml(
-        [station.state, station.tags, station.codec]
+        [
+          station.state,
+          station.tags,
+          station.codec
+        ]
           .filter(Boolean)
           .join(" • ")
       )}</span>
     `;
 
-    button.addEventListener("click", () => selectStation(station));
+    button.addEventListener(
+      "click",
+      () => selectStation(station)
+    );
+
     return button;
   }
 
   function escapeHtml(value) {
-    return String(value).replace(/[&<>"']/g, char => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;"
-    }[char]));
+    return String(value).replace(
+      /[&<>"']/g,
+      char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+      }[char])
+    );
   }
 
   function renderStations(stations) {
-    list.replaceChildren(...stations.map(createStation));
+    list.replaceChildren(
+      ...stations.map(createStation)
+    );
 
     if (!stations.length) {
-      message.textContent = "Tidak ada stasiun yang cocok.";
+      message.textContent =
+        "Tidak ada stasiun yang cocok.";
       return;
     }
 
+    const label =
+      CATEGORY_CONFIG[currentCategory]?.label ||
+      "Favorites";
+
     message.textContent =
-      stations.length + " stasiun " +
-      CATEGORY_CONFIG[currentCategory].label +
-      " cocok.";
+      stations.length +
+      " stasiun " +
+      label +
+      " tersedia.";
   }
 
   function filterStations() {
-    const query = stationSearch.value.trim().toLowerCase();
+    const query =
+      stationSearch.value.trim().toLowerCase();
 
     if (!query) {
       renderStations(currentStations);
-
-      message.textContent =
-        currentStations.length + " stasiun " +
-        CATEGORY_CONFIG[currentCategory].label +
-        " tersedia.";
-
       return;
     }
 
-    const filtered = currentStations.filter(station => {
-      const haystack = [
-        station.name,
-        station.state,
-        station.tags,
-        station.codec,
-        station.country,
-        station.language
-      ]
-        .filter(Boolean)
-        .join(" ")
-        .toLowerCase();
+    const filtered =
+      currentStations.filter(station => {
+        const haystack = [
+          station.name,
+          station.state,
+          station.tags,
+          station.codec,
+          station.country,
+          station.language
+        ]
+          .filter(Boolean)
+          .join(" ")
+          .toLowerCase();
 
-      return haystack.includes(query);
-    });
+        return haystack.includes(query);
+      });
 
     renderStations(filtered);
   }
 
-  async function loadStations(category = currentCategory) {
+  async function loadStations(
+    category = currentCategory
+  ) {
+    if (category === "favorites") {
+      currentCategory = "favorites";
+      currentStations = getFavorites();
 
+      list.replaceChildren();
+      stationSearch.value = "";
 
-    const config = CATEGORY_CONFIG[category];
+      if (!currentStations.length) {
+        message.textContent =
+          "Belum ada stasiun favorit. " +
+          "Pilih stasiun lalu gunakan Favorites.";
+        setStatus("FAVORITES • EMPTY");
+        return;
+      }
+
+      renderStations(currentStations);
+      setStatus(
+        "FAVORITES • " +
+        currentStations.length +
+        " STATIONS"
+      );
+
+      return;
+    }
+
+    const config =
+      CATEGORY_CONFIG[category];
 
     if (!config) {
       return;
@@ -580,45 +1075,70 @@ audio {
 
     currentCategory = category;
     list.replaceChildren();
-    message.textContent = "Memuat stasiun " + config.label + "...";
-    setStatus("LOADING • " + config.label);
+
+    message.textContent =
+      "Memuat stasiun " +
+      config.label +
+      "...";
+
+    setStatus(
+      "LOADING • " +
+      config.label
+    );
+
     liveDot.classList.remove("live");
 
     try {
       const response = await fetch(
         API_BASE + "?" + config.params,
         {
-          headers: { "Accept": "application/json" }
+          headers: {
+            "Accept": "application/json"
+          }
         }
       );
 
       if (!response.ok) {
-        throw new Error("API HTTP " + response.status);
+        throw new Error(
+          "API HTTP " + response.status
+        );
       }
 
-      const stations = await response.json();
+      const stations =
+        await response.json();
 
-      const playable = stations.filter(station =>
-        station.lastcheckok === 1 &&
-        station.url_resolved &&
-        station.url_resolved.startsWith("https://")
-      );
+      const playable =
+        stations.filter(station =>
+          station.lastcheckok === 1 &&
+          station.url_resolved &&
+          station.url_resolved.startsWith("https://")
+        );
 
       if (!playable.length) {
         currentStations = [];
+
         message.textContent =
           "Belum ada stream HTTPS yang tersedia untuk " +
-          config.label + ".";
-        setStatus("NO HTTPS STREAM • " + config.label);
+          config.label +
+          ".";
+
+        setStatus(
+          "NO HTTPS STREAM • " +
+          config.label
+        );
+
         return;
       }
 
       currentStations = playable;
+
       renderStations(playable);
 
       message.textContent =
-        playable.length + " stasiun " +
-        config.label + " tersedia.";
+        playable.length +
+        " stasiun " +
+        config.label +
+        " tersedia.";
 
       setStatus(
         config.label +
@@ -629,45 +1149,89 @@ audio {
 
     } catch (error) {
       console.error(error);
+
       message.textContent =
         "Gagal memuat direktori " +
         config.label +
         ". Coba lagi nanti.";
-      setStatus("DIRECTORY ERROR • " + config.label);
+
+      setStatus(
+        "DIRECTORY ERROR • " +
+        config.label
+      );
     }
   }
 
-  player.addEventListener("playing", () => {
-    setStatus("LIVE • " + (player.src ? "STREAM ACTIVE" : "READY"));
-    liveDot.classList.add("live");
-  });
+  player.addEventListener(
+    "playing",
+    () => {
+      setStatus(
+        "LIVE • " +
+        (player.src
+          ? "STREAM ACTIVE"
+          : "READY")
+      );
 
-  player.addEventListener("pause", () => {
-    liveDot.classList.remove("live");
-  });
+      liveDot.classList.add("live");
+    }
+  );
 
-  player.addEventListener("error", () => {
-    liveDot.classList.remove("live");
-    setStatus("STREAM ERROR • Pilih stasiun lain");
-  });
+  player.addEventListener(
+    "pause",
+    () => {
+      liveDot.classList.remove("live");
+    }
+  );
 
-  document.querySelectorAll(".tab[data-category]").forEach(tab => {
-    tab.addEventListener("click", () => {
-      if (tab.disabled) {
-        return;
-      }
+  player.addEventListener(
+    "error",
+    () => {
+      liveDot.classList.remove("live");
 
-      document.querySelectorAll(".tab[data-category]").forEach(item => {
-        item.classList.toggle("active", item === tab);
-      });
+      setStatus(
+        "STREAM ERROR • Pilih stasiun lain"
+      );
+    }
+  );
 
-      stationSearch.value = "";
-      loadStations(tab.dataset.category);
+  document
+    .querySelectorAll(".tab[data-category]")
+    .forEach(tab => {
+      tab.addEventListener(
+        "click",
+        () => {
+          if (tab.disabled) {
+            return;
+          }
+
+          document
+            .querySelectorAll(
+              ".tab[data-category]"
+            )
+            .forEach(item => {
+              item.classList.toggle(
+                "active",
+                item === tab
+              );
+            });
+
+          stationSearch.value = "";
+
+          loadStations(
+            tab.dataset.category
+          );
+        }
+      );
     });
-  });
 
-  stationSearch.addEventListener("input", filterStations);
+  stationSearch.addEventListener(
+    "input",
+    filterStations
+  );
 
+  updateFavoriteTab();
+  updateRadioActions();
+  renderRecentHistory();
   loadStations();
 })();
 </script>
