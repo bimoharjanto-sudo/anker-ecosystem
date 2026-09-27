@@ -538,6 +538,11 @@ audio {
     <button class="tab" type="button" data-category="classicrock">Classic Rock</button>
     <button class="tab" type="button" data-category="hardrock">Hard Rock</button>
     <button class="tab" type="button" data-category="heavymetal">Heavy Metal</button>
+    <button class="tab" type="button" data-category="reggae">Reggae</button>
+    <button class="tab" type="button" data-category="punkrock">Punk Rock</button>
+    <button class="tab" type="button" data-category="poppunk">Pop Punk</button>
+    <button class="tab" type="button" data-category="deeppurple">Deep Purple</button>
+    <button class="tab" type="button" data-category="hardheavy">Hard &amp; Heavy</button>
     <button class="tab" type="button" data-category="favorites" disabled>Favorites</button>
   </nav>
 
@@ -636,6 +641,26 @@ audio {
     heavymetal: {
       label: "Heavy Metal",
       params: "tag=heavy%20metal&hidebroken=true&lastcheckok=1&order=votes&reverse=true&limit=100"
+    },
+    reggae: {
+      label: "Reggae",
+      params: "tag=reggae&hidebroken=true&lastcheckok=1&order=votes&reverse=true&limit=100"
+    },
+    punkrock: {
+      label: "Punk Rock",
+      params: "tag=punk%20rock&hidebroken=true&lastcheckok=1&order=votes&reverse=true&limit=100"
+    },
+    poppunk: {
+      label: "Pop Punk",
+      params: "tag=pop%20punk&hidebroken=true&lastcheckok=1&order=votes&reverse=true&limit=100"
+    },
+    deeppurple: {
+      label: "Deep Purple",
+      params: "tag=deep%20purple&hidebroken=true&lastcheckok=1&order=votes&reverse=true&limit=100"
+    },
+    hardheavy: {
+      label: "Hard & Heavy",
+      params: "tag=hard%20and%20heavy&hidebroken=true&lastcheckok=1&order=votes&reverse=true&limit=100"
     }
   };
 
@@ -679,6 +704,56 @@ audio {
       url_resolved: "https://cast1.torontocast.com:4660/stream",
       homepage: "",
       tags: "heavy metal"
+    },
+    reggae: {
+      stationuuid: "a3253a96-a1ba-4cf5-bf4b-ec7988afcfd3",
+      name: "REGGAE CHILL CAFE",
+      codec: "MP3",
+      bitrate: 128,
+      country: "Canada",
+      url_resolved: "https://maggie.torontocast.com:2020/stream/reggaechillcafe",
+      homepage: "",
+      tags: "reggae"
+    },
+    punkrock: {
+      stationuuid: "88a2899f-a42f-43ed-b2bc-6d5e40b8131c",
+      name: "Mariskal Rock",
+      codec: "MP3",
+      bitrate: 192,
+      country: "Spain",
+      url_resolved: "https://media.profesionalhosting.com:8047/stream",
+      homepage: "",
+      tags: "punk rock;rock"
+    },
+    poppunk: {
+      stationuuid: "2528fcc2-7816-4e60-aa13-59e5bcc6dc50",
+      name: "Exclusively Green Day",
+      codec: "MP3",
+      bitrate: 128,
+      country: "United Arab Emirates",
+      url_resolved: "https://streaming.exclusive.radio/er/greenday/icecast.audio",
+      homepage: "",
+      tags: "pop punk;green day"
+    },
+    deeppurple: {
+      stationuuid: "anker-deep-purple",
+      name: "Exclusively Deep Purple",
+      codec: "MP3",
+      bitrate: 128,
+      country: "United Arab Emirates",
+      url_resolved: "https://streaming.exclusive.radio/er/deeppurple/icecast.audio",
+      homepage: "",
+      tags: "deep purple;hard rock"
+    },
+    hardheavy: {
+      stationuuid: "rmf-hard-heavy-anker",
+      name: "Radio RMF Hard & Heavy",
+      codec: "AAC+",
+      bitrate: 0,
+      country: "Poland",
+      url_resolved: "https://rs201-krk-cyfronet.rmfstream.pl/HARDHEAVY",
+      homepage: "https://www.rmfon.pl/",
+      tags: "hard rock;heavy metal;power metal"
     }
   };
 
