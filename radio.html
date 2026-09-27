@@ -534,6 +534,10 @@ audio {
     <button class="tab active" type="button" data-category="indonesia">Indonesia</button>
     <button class="tab" type="button" data-category="world">World</button>
     <button class="tab" type="button" data-category="music">Music</button>
+    <button class="tab" type="button" data-category="slowrock">Slow Rock</button>
+    <button class="tab" type="button" data-category="classicrock">Classic Rock</button>
+    <button class="tab" type="button" data-category="hardrock">Hard Rock</button>
+    <button class="tab" type="button" data-category="heavymetal">Heavy Metal</button>
     <button class="tab" type="button" data-category="favorites" disabled>Favorites</button>
   </nav>
 
@@ -616,6 +620,65 @@ audio {
     music: {
       label: "Music",
       params: "tag=music&hidebroken=true&order=votes&reverse=true&limit=100"
+    },
+    slowrock: {
+      label: "Slow Rock",
+      params: "tag=slow%20rock&hidebroken=true&lastcheckok=1&order=votes&reverse=true&limit=100"
+    },
+    classicrock: {
+      label: "Classic Rock",
+      params: "tag=classic%20rock&hidebroken=true&lastcheckok=1&order=votes&reverse=true&limit=100"
+    },
+    hardrock: {
+      label: "Hard Rock",
+      params: "tag=hard%20rock&hidebroken=true&lastcheckok=1&order=votes&reverse=true&limit=100"
+    },
+    heavymetal: {
+      label: "Heavy Metal",
+      params: "tag=heavy%20metal&hidebroken=true&lastcheckok=1&order=votes&reverse=true&limit=100"
+    }
+  };
+
+  const ANKER_GENRE_STATIONS = {
+    slowrock: {
+      stationuuid: "7c3927d0-f5c2-4295-82d9-3db0f54fe219",
+      name: "Slow Rock 90'",
+      codec: "MP3",
+      bitrate: 128,
+      country: "Malaysia",
+      url_resolved: "https://stream.zeno.fm/hiut6cwfoneuv",
+      homepage: "",
+      tags: "slow rock"
+    },
+    classicrock: {
+      stationuuid: "d7f5a497-40ec-11e9-aa55-52543be04c81",
+      name: "0 N - Classic Rock on Radio",
+      codec: "MP3",
+      bitrate: 128,
+      country: "Germany",
+      url_resolved: "https://0n-classicrock.radionetz.de/0n-classicrock.mp3",
+      homepage: "",
+      tags: "classic rock"
+    },
+    hardrock: {
+      stationuuid: "e5b81ad3-bb7d-41a5-a3d3-0f715434778e",
+      name: "Megarock Radio 320k",
+      codec: "MP3",
+      bitrate: 320,
+      country: "The United States Of America",
+      url_resolved: "https://stream3.megarockradio.net:80/",
+      homepage: "",
+      tags: "hard rock"
+    },
+    heavymetal: {
+      stationuuid: "d0df2a51-9cd3-4f3e-977d-aab92ddef7a3",
+      name: "100 GREATEST HEAVY METAL",
+      codec: "MP3",
+      bitrate: 192,
+      country: "Canada",
+      url_resolved: "https://cast1.torontocast.com:4660/stream",
+      homepage: "",
+      tags: "heavy metal"
     }
   };
 
@@ -1314,6 +1377,23 @@ audio {
           station.url_resolved &&
           station.url_resolved.startsWith("https://")
         );
+
+      // ANKER verified genre station.
+      // Untuk 4 genre baru, station yang sudah diuji
+      // tetap ditampilkan sebagai featured/playable station.
+      const featuredStation =
+        ANKER_GENRE_STATIONS[currentCategory];
+
+      if (
+        featuredStation &&
+        !playable.some(
+          station =>
+            stationId(station) ===
+            featuredStation.stationuuid
+        )
+      ) {
+        playable.unshift(featuredStation);
+      }
 
       if (!playable.length) {
         currentStations = [];
