@@ -1,0 +1,549 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#070914">
+<meta name="description" content="ANKER TV - public and official streaming directory">
+<title>ANKER TV • One Hub</title>
+
+<style>
+:root{
+  --bg:#070914;
+  --panel:#0d1220;
+  --panel2:#11182a;
+  --line:#24304a;
+  --text:#edf3ff;
+  --muted:#8d9bb5;
+  --accent:#35d7ff;
+  --accent2:#8d6cff;
+  --green:#55e6a5;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;
+  background:radial-gradient(circle at top,#111a32 0,#070914 42%);
+  color:var(--text);
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+a{color:inherit;text-decoration:none}
+.container{
+  width:min(100% - 28px,1100px);
+  margin:auto;
+}
+header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  backdrop-filter:blur(14px);
+  background:rgba(7,9,20,.86);
+  border-bottom:1px solid var(--line);
+}
+.nav{
+  min-height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.brand{
+  font-weight:800;
+  letter-spacing:.12em;
+}
+.brand span{color:var(--accent)}
+.back{
+  border:1px solid var(--line);
+  background:var(--panel);
+  padding:8px 12px;
+  border-radius:10px;
+  color:var(--muted);
+  font-size:13px;
+}
+.hero{
+  padding:34px 0 20px;
+}
+.eyebrow{
+  color:var(--accent);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.18em;
+}
+h1{
+  margin:8px 0;
+  font-size:clamp(32px,8vw,58px);
+  line-height:1;
+}
+.hero p{
+  margin:0;
+  max-width:700px;
+  color:var(--muted);
+  line-height:1.6;
+}
+.player{
+  margin:10px 0 24px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  overflow:hidden;
+  background:#03050b;
+  box-shadow:0 18px 60px rgba(0,0,0,.35);
+}
+.screen{
+  aspect-ratio:16/9;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  text-align:center;
+  background:
+    radial-gradient(circle at 50% 30%,#18264b 0,#080b16 58%,#03050b 100%);
+}
+.screen-title{
+  font-size:22px;
+  font-weight:800;
+}
+.screen-note{
+  margin-top:8px;
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+.info{
+  padding:16px;
+  border-top:1px solid var(--line);
+}
+.info strong{display:block}
+.status{
+  margin-top:6px;
+  color:var(--green);
+  font-size:12px;
+}
+
+</style>
+</head>
+
+<body>
+<header>
+  <div class="container nav">
+    <a class="brand" href="index.html">ANKER<span> ONE HUB</span></a>
+    <a class="back" href="index.html">← HUB</a>
+  </div>
+</header>
+
+<main class="container">
+
+<section class="hero">
+  <div class="eyebrow">ONE HUB • STREAMING DIRECTORY</div>
+  <h1>ANKER TV</h1>
+  <p>
+    Direktori TV streaming publik dengan sumber resmi atau sumber yang
+    mengizinkan akses publik. Pilih channel untuk melihat sumber siaran.
+  </p>
+</section>
+
+<section class="player" aria-label="ANKER TV player">
+  <div class="screen" id="tvScreen">
+    <div>
+      <div class="screen-title" id="screenTitle">ANKER TV</div>
+      <div class="screen-note" id="screenNote">
+        Pilih channel dari direktori di bawah.
+      </div>
+    </div>
+  </div>
+
+  <div class="info">
+    <strong id="channelName">Belum ada channel dipilih</strong>
+    <div class="status" id="tvStatus">● READY</div>
+  </div>
+</section>
+
+<nav class="tabs" aria-label="Kategori TV">
+  <button class="tab active" data-category="all">ALL</button>
+  <button class="tab" data-category="indonesia">INDONESIA</button>
+  <button class="tab" data-category="sport">SPORT</button>
+  <button class="tab" data-category="nature">GEOGRAPHY / NATURE</button>
+  <button class="tab" data-category="anker">ANKERBELLOK TV</button>
+</nav>
+
+<section>
+  <div class="section-head">
+    <h2>CHANNEL DIRECTORY</h2>
+    <span id="channelCount">0 CHANNEL</span>
+  </div>
+
+  <div class="channels" id="channels"></div>
+</section>
+
+<section class="share-box">
+  <strong>SMART SHARE</strong>
+  <p id="shareText">Pilih channel untuk membuat link share.</p>
+  <button id="copyShare" type="button">COPY LINK</button>
+</section>
+
+</main>
+
+<footer class="container">
+  ANKER TV • Official / Public Streaming Directory
+</footer>
+
+<style>
+.tabs{
+  display:flex;
+  gap:8px;
+  overflow-x:auto;
+  padding:4px 0 18px;
+  scrollbar-width:none;
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:0 0 auto;
+  border:1px solid var(--line);
+  background:var(--panel);
+  color:var(--muted);
+  border-radius:999px;
+  padding:9px 13px;
+  font-size:12px;
+  font-weight:700;
+}
+.tab.active{
+  color:var(--text);
+  border-color:var(--accent);
+}
+.section-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin:4px 0 12px;
+}
+.section-head h2{
+  margin:0;
+  font-size:15px;
+}
+.section-head span{
+  color:var(--muted);
+  font-size:11px;
+}
+.channels{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:12px;
+}
+.channel{
+  border:1px solid var(--line);
+  background:linear-gradient(145deg,var(--panel2),var(--panel));
+  border-radius:15px;
+  padding:15px;
+}
+.channel h3{
+  margin:0 0 6px;
+  font-size:16px;
+}
+.channel p{
+  margin:0 0 14px;
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+.channel button{
+  width:100%;
+  border:0;
+  border-radius:10px;
+  padding:10px;
+  background:var(--accent);
+  color:#041018;
+  font-weight:800;
+}
+.share-box{
+  margin:24px 0 35px;
+  padding:16px;
+  border:1px solid var(--line);
+  border-radius:15px;
+  background:var(--panel);
+}
+.share-box p{
+  color:var(--muted);
+  font-size:12px;
+  line-height:1.5;
+}
+.share-box button{
+  border:1px solid var(--line);
+  background:var(--panel2);
+  color:var(--text);
+  border-radius:9px;
+  padding:9px 12px;
+}
+footer{
+  padding:0 0 35px;
+  color:var(--muted);
+  font-size:11px;
+  text-align:center;
+}
+</style>
+
+<script>
+const channels = [
+  {
+    id:"france24-en",
+    name:"France 24 English",
+    category:"news",
+    description:"France 24 English — live HLS stream.",
+    type:"hls",
+    streamUrl:"https://live.france24.com/hls/live/2037218/F24_EN_HI_HLS/master_2300.m3u8",
+    url:"https://www.france24.com/en/"
+  },
+  {
+    id:"nhk-world",
+    name:"NHK World-Japan",
+    category:"news",
+    description:"NHK World-Japan — live HLS stream.",
+    type:"hls",
+    streamUrl:"https://media-tyo.hls.nhkworld.jp/hls/w/live/master.m3u8",
+    url:"https://www3.nhk.or.jp/nhkworld/"
+  },
+  {
+    id:"cna-international",
+    name:"CNA International",
+    category:"news",
+    description:"CNA International — live HLS stream.",
+    type:"hls",
+    streamUrl:"https://d2e1asnsl7br7b.cloudfront.net/7782e205e72f43aeb4a48ec97f66ebbe/index_4.m3u8",
+    url:"https://www.channelnewsasia.com/watch"
+  },
+  {
+    id:"dw-english",
+    name:"DW English",
+    category:"news",
+    description:"DW English — live HLS stream.",
+    type:"hls",
+    streamUrl:"https://dwamdstream102.akamaized.net/hls/live/2015525/dwstream102/index.m3u8",
+    url:"https://www.dw.com/en/live-tv/s-100825"
+  },
+  {
+    id:"nusantara-tv",
+    name:"Nusantara TV",
+    category:"indonesia",
+    description:"Nusantara TV — live HLS 1080p.",
+    type:"hls",
+    streamUrl:"https://nusantaratv.siar.us/nusantaratv/live/playlist.m3u8",
+    url:"https://www.nusantaratv.com/live"
+  },
+  {
+    id:"motorvision",
+    name:"Motorvision",
+    category:"automotive",
+    description:"Motorvision — automotive and motorsport FAST channel.",
+    type:"hls",
+    streamUrl:"https://mvg-mv-xumo.otteravision.com/mvg/mv/mv.m3u8",
+    url:"https://www.motorvision.tv/"
+  },
+  {
+    id:"speedvision",
+    name:"Speedvision",
+    category:"automotive",
+    description:"Speedvision — automotive FAST channel.",
+    type:"hls",
+    streamUrl:"https://eb9a3a62.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/T05PX1NwZWVkdmlzaW9uX0hMUw/playlist.m3u8",
+    url:"https://www.speedvisionnetwork.com/live"
+  },
+  {
+    id:"redbull-tv",
+    name:"Red Bull TV",
+    category:"sport",
+    description:"Red Bull TV — live HLS stream.",
+    type:"hls",
+    streamUrl:"https://3ea22335.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/UmFrdXRlblRWLWdiX1JlZEJ1bGxUVl9ITFM/playlist.m3u8",
+    url:"https://www.redbull.com/int-en/live"
+  },
+  {
+    id:"powernation",
+    name:"POWERNATION",
+    category:"automotive",
+    description:"POWERNATION — engine builds, muscle cars, trucks and automotive projects.",
+    type:"hls",
+    streamUrl:"https://amg01258-raycomsports-powernationau-samsungau-18bwc.amagi.tv/playlist.m3u8",
+    url:"https://www.powernationtv.com/"
+  },
+  {
+    id:"ankerbellok-tv",
+    name:"ANKERBELLOK TV",
+    category:"anker",
+    description:"Official ANKERBELLOK TV.",
+    type:"youtube",
+    videoId:"CEceyF0RCT8",
+    url:"https://www.youtube.com/@ankerbelloktv"
+  }
+];
+
+const channelsEl = document.getElementById("channels");
+const countEl = document.getElementById("channelCount");
+const screenTitle = document.getElementById("screenTitle");
+const screenNote = document.getElementById("screenNote");
+const channelName = document.getElementById("channelName");
+const tvStatus = document.getElementById("tvStatus");
+const shareText = document.getElementById("shareText");
+const copyShare = document.getElementById("copyShare");
+
+function renderChannels(category="all"){
+  const list = category === "all"
+    ? channels
+    : channels.filter(item => item.category === category);
+
+  countEl.textContent = list.length + " CHANNEL";
+
+  channelsEl.innerHTML = list.map(item => `
+    <article class="channel">
+      <h3>${item.name}</h3>
+      <p>${item.description}</p>
+      <button type="button" data-id="${item.id}">
+        OPEN OFFICIAL SOURCE
+      </button>
+    </article>
+  `).join("");
+}
+
+let hlsPlayer = null;
+
+function cleanupPlayer(){
+  if(hlsPlayer){
+    hlsPlayer.destroy();
+    hlsPlayer = null;
+  }
+
+  screenNote.innerHTML = "";
+}
+
+function selectChannel(id){
+  const channel = channels.find(item => item.id === id);
+  if(!channel) return;
+
+  screenTitle.textContent = channel.name;
+  channelName.textContent = channel.name;
+
+  const url = new URL(window.location.href);
+  url.searchParams.set("channel", channel.id);
+  history.replaceState(null,"",url);
+
+  shareText.textContent = url.href;
+
+  cleanupPlayer();
+
+  if(channel.type === "youtube" && channel.videoId){
+    screenNote.innerHTML = `
+      <iframe
+        src="https://www.youtube.com/embed/${channel.videoId}?rel=0"
+        title="${channel.name}"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen
+        style="width:100%;height:100%;border:0;border-radius:12px;"
+      ></iframe>
+    `;
+
+    tvStatus.textContent = "● PLAYING INSIDE ANKER TV";
+    return;
+  }
+
+  if(channel.type === "hls" && channel.streamUrl){
+    screenNote.innerHTML = `
+      <video
+        id="ankerHlsVideo"
+        controls
+        playsinline
+        autoplay
+        style="width:100%;height:100%;border:0;border-radius:12px;background:#000;"
+      ></video>
+    `;
+
+    const video = document.getElementById("ankerHlsVideo");
+
+    if(video.canPlayType("application/vnd.apple.mpegurl")){
+      video.src = channel.streamUrl;
+      video.play().catch(() => {});
+      tvStatus.textContent = "● LIVE HLS INSIDE ANKER TV";
+      return;
+    }
+
+    if(window.Hls && Hls.isSupported()){
+      hlsPlayer = new Hls();
+      hlsPlayer.loadSource(channel.streamUrl);
+      hlsPlayer.attachMedia(video);
+
+      hlsPlayer.on(Hls.Events.MANIFEST_PARSED,() => {
+        video.play().catch(() => {});
+      });
+
+      tvStatus.textContent = "● LIVE HLS INSIDE ANKER TV";
+      return;
+    }
+
+    screenNote.textContent =
+      "Browser ini belum mendukung HLS playback.";
+
+    tvStatus.textContent = "● HLS NOT SUPPORTED";
+    return;
+  }
+
+  screenNote.textContent =
+    "ANKER TV menggunakan sumber resmi/public. Player internal belum diaktifkan untuk channel ini.";
+
+  tvStatus.textContent = "● OFFICIAL SOURCE READY";
+
+  window.open(channel.url,"_blank","noopener");
+}
+
+channelsEl.addEventListener("click",event => {
+  const button = event.target.closest("button[data-id]");
+  if(!button) return;
+  selectChannel(button.dataset.id);
+});
+
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click",() => {
+    document.querySelectorAll(".tab").forEach(item => {
+      item.classList.remove("active");
+    });
+
+    tab.classList.add("active");
+    renderChannels(tab.dataset.category);
+  });
+});
+
+copyShare.addEventListener("click",async () => {
+  try{
+    await navigator.clipboard.writeText(window.location.href);
+    copyShare.textContent = "COPIED ✓";
+
+    setTimeout(() => {
+      copyShare.textContent = "COPY LINK";
+    },1500);
+  }catch(error){
+    copyShare.textContent = "COPY FAILED";
+  }
+});
+
+const initialChannel =
+  new URLSearchParams(window.location.search).get("channel");
+
+renderChannels("all");
+
+if(initialChannel){
+  const exists = channels.some(item => item.id === initialChannel);
+
+  if(exists){
+    const channel = channels.find(item => item.id === initialChannel);
+
+    if(channel.type === "youtube" && channel.videoId){
+      selectChannel(initialChannel);
+    }else{
+      screenTitle.textContent = channel.name;
+      channelName.textContent = channel.name;
+      tvStatus.textContent = "● CHANNEL READY";
+      shareText.textContent = window.location.href;
+    }
+  }
+}
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@1.6.13/dist/hls.min.js"></script>
+</body>
+</html>
