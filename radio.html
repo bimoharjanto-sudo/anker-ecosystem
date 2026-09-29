@@ -328,6 +328,69 @@
   word-break: break-word;
 }
 
+/* ANKER RADIO — Mood Bubble foundation */
+.station {
+  position: relative;
+  overflow: hidden;
+  border-radius: 18px;
+  padding: 15px 17px;
+  background:
+    linear-gradient(135deg,
+      rgba(255,255,255,.10),
+      rgba(255,255,255,.035));
+  border-color: rgba(255,255,255,.16);
+  box-shadow:
+    0 8px 22px rgba(0,0,0,.10),
+    inset 0 1px 0 rgba(255,255,255,.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transition:
+    transform .18s ease,
+    background .25s ease,
+    border-color .25s ease,
+    box-shadow .25s ease;
+}
+
+.station::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(255,255,255,.12),
+      transparent 42%
+    );
+}
+
+.station:hover {
+  transform: translateY(-2px);
+  background:
+    linear-gradient(135deg,
+      rgba(255,255,255,.15),
+      rgba(255,255,255,.055));
+  border-color: rgba(255,255,255,.28);
+  box-shadow:
+    0 12px 28px rgba(0,0,0,.16),
+    inset 0 1px 0 rgba(255,255,255,.10);
+}
+
+.station strong,
+.station span {
+  position: relative;
+  z-index: 1;
+}
+
+.station strong {
+  letter-spacing: .01em;
+}
+
+.station span {
+  color: rgba(255,255,255,.78);
+  opacity: 1;
+}
+
 .player {
   margin-top: 24px;
 }
@@ -501,7 +564,251 @@ audio {
   }
 }
 
+
+/* ANKER RADIO — Genre Mood Themes */
+body {
+  --radio-mood-a: #173b8f;
+  --radio-mood-b: #3156b8;
+  --radio-mood-glow: rgba(49,86,184,.22);
+  transition: background .35s ease;
+}
+
+body.radio-mood {
+  background:
+    radial-gradient(
+      circle at 15% 10%,
+      var(--radio-mood-glow),
+      transparent 34%
+    ),
+    radial-gradient(
+      circle at 90% 85%,
+      var(--radio-mood-glow),
+      transparent 38%
+    ),
+    var(--bg, #0b1020);
+}
+
+body.radio-mood .station {
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--radio-mood-a) 72%, transparent),
+      color-mix(in srgb, var(--radio-mood-b) 48%, transparent)
+    );
+  border-color: color-mix(
+    in srgb,
+    var(--radio-mood-b) 48%,
+    rgba(255,255,255,.18)
+  );
+}
+
+body.radio-mood .station:hover {
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--radio-mood-a) 84%, transparent),
+      color-mix(in srgb, var(--radio-mood-b) 64%, transparent)
+    );
+}
+
+body.mood-indonesia {
+  --radio-mood-a: #087f72;
+  --radio-mood-b: #1769aa;
+  --radio-mood-glow: rgba(8,127,114,.22);
+}
+
+body.mood-world {
+  --radio-mood-a: #3155a4;
+  --radio-mood-b: #6d3ba8;
+  --radio-mood-glow: rgba(109,59,168,.22);
+}
+
+body.mood-music {
+  --radio-mood-a: #087f9b;
+  --radio-mood-b: #3156b8;
+  --radio-mood-glow: rgba(8,127,155,.22);
+}
+
+body.mood-slowrock {
+  --radio-mood-a: #263c91;
+  --radio-mood-b: #713f9f;
+  --radio-mood-glow: rgba(113,63,159,.24);
+}
+
+body.mood-classicrock {
+  --radio-mood-a: #9a5a18;
+  --radio-mood-b: #6c3b91;
+  --radio-mood-glow: rgba(154,90,24,.22);
+}
+
+body.mood-hardrock {
+  --radio-mood-a: #9d241f;
+  --radio-mood-b: #6e2b83;
+  --radio-mood-glow: rgba(157,36,31,.25);
+}
+
+body.mood-heavymetal {
+  --radio-mood-a: #4b1520;
+  --radio-mood-b: #681d78;
+  --radio-mood-glow: rgba(104,29,120,.25);
+}
+
+body.mood-reggae {
+  --radio-mood-a: #19744c;
+  --radio-mood-b: #087f72;
+  --radio-mood-glow: rgba(25,116,76,.22);
+}
+
+body.mood-punkrock {
+  --radio-mood-a: #9a245d;
+  --radio-mood-b: #6c2c91;
+  --radio-mood-glow: rgba(154,36,93,.24);
+}
+
+body.mood-poppunk {
+  --radio-mood-a: #087f9b;
+  --radio-mood-b: #9a3c91;
+  --radio-mood-glow: rgba(154,60,145,.22);
+}
+
+body.mood-deeppurple {
+  --radio-mood-a: #54228f;
+  --radio-mood-b: #812d91;
+  --radio-mood-glow: rgba(129,45,145,.25);
+}
+
+body.mood-hardheavy {
+  --radio-mood-a: #252033;
+  --radio-mood-b: #8b2534;
+  --radio-mood-glow: rgba(139,37,52,.25);
+}
+
+body.mood-favorites {
+  --radio-mood-a: #3156b8;
+  --radio-mood-b: #6d3ba8;
+  --radio-mood-glow: rgba(109,59,168,.22);
+}
+
+
+/* ANKER RADIO — Logo Hero */
+.radio-hero-logo {
+  display: block;
+  width: min(100%, 760px);
+  height: auto;
+  margin: 0 auto 22px;
+  border-radius: 20px;
+  box-shadow:
+    0 16px 42px rgba(0,0,0,.28),
+    0 0 28px rgba(70,120,255,.10);
+}
+
 </style>
+
+<style>
+/* ANKER RADIO — Active Genre Green Indicator */
+.tab.active {
+  position: relative;
+  color: #d9ffe9;
+  background:
+    linear-gradient(
+      135deg,
+      rgba(25, 170, 92, .34),
+      rgba(20, 115, 72, .22)
+    );
+  border-color: rgba(55, 220, 125, .72);
+  box-shadow:
+    0 0 0 1px rgba(55, 220, 125, .18),
+    0 6px 18px rgba(20, 180, 90, .18),
+    inset 0 1px 0 rgba(255,255,255,.10);
+  text-shadow:
+    0 0 10px rgba(70,255,145,.28);
+}
+
+.tab.active::after {
+  content: "";
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: 5px;
+  height: 3px;
+  border-radius: 999px;
+  background: #42e889;
+  box-shadow:
+    0 0 8px rgba(66,232,137,.85),
+    0 0 16px rgba(66,232,137,.45);
+}
+
+.tab.active::before {
+  content: "●";
+  margin-right: 6px;
+  color: #42e889;
+  font-size: .72em;
+  vertical-align: 1px;
+  text-shadow:
+    0 0 7px rgba(66,232,137,.9);
+}
+</style>
+
+
+<style>
+/* ANKER RADIO — Active Station Green ON */
+/* ANKER RADIO — Active Station Green ON */
+body.radio-mood .station.active {
+  background:
+    linear-gradient(
+      135deg,
+      rgba(20, 185, 95, .72),
+      rgba(18, 125, 72, .52)
+    ) !important;
+
+  border-color:
+    rgba(72, 255, 145, .95) !important;
+
+  color:
+    #ffffff !important;
+
+  box-shadow:
+    0 0 0 1px rgba(72,255,145,.35),
+    0 0 18px rgba(50,235,125,.42),
+    0 12px 30px rgba(10,120,65,.30),
+    inset 0 1px 0 rgba(255,255,255,.18) !important;
+
+  transform: translateY(-2px);
+}
+
+body.radio-mood .station.active strong {
+  color: #ffffff !important;
+  text-shadow:
+    0 0 8px rgba(120,255,175,.35);
+}
+
+body.radio-mood .station.active span {
+  color: rgba(235,255,244,.92) !important;
+}
+
+body.radio-mood .station.active::after {
+  content: "● ON";
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  z-index: 5;
+
+  padding: 3px 8px;
+  border-radius: 999px;
+
+  background: rgba(5,55,28,.88);
+  border: 1px solid rgba(72,255,145,.82);
+
+  color: #5dff9a;
+  font-size: .68rem;
+  font-weight: 800;
+  letter-spacing: .05em;
+
+  box-shadow:
+    0 0 8px rgba(72,255,145,.45);
+}
+</style>
+
 </head>
 
 <body>
@@ -520,6 +827,13 @@ audio {
 <main>
 
   <section class="hero">
+    <img
+      class="radio-hero-logo"
+      src="/anker-radio-logo.png"
+      alt="ANKER RADIO — STATION"
+      width="1672"
+      height="941"
+    >
     <div class="eyebrow">ANKER ONE HUB • RADIO</div>
     <h1>ANKER RADIO</h1>
     <p>
@@ -761,6 +1075,36 @@ audio {
   const HISTORY_KEY = "anker_radio_history_v1";
 
   let currentCategory = "indonesia";
+
+  function applyRadioMood(category = currentCategory) {
+    const moodClasses = [
+      "radio-mood",
+      "mood-indonesia",
+      "mood-world",
+      "mood-music",
+      "mood-slowrock",
+      "mood-classicrock",
+      "mood-hardrock",
+      "mood-heavymetal",
+      "mood-reggae",
+      "mood-punkrock",
+      "mood-poppunk",
+      "mood-deeppurple",
+      "mood-hardheavy",
+      "mood-favorites"
+    ];
+
+    document.body.classList.remove(...moodClasses);
+
+    if (!category) {
+      return;
+    }
+
+    document.body.classList.add(
+      "radio-mood",
+      "mood-" + category
+    );
+  }
   let currentStations = [];
   let currentStation = null;
 
@@ -1413,6 +1757,7 @@ audio {
     }
 
     currentCategory = category;
+    applyRadioMood(currentCategory);
     list.replaceChildren();
 
     message.textContent =
@@ -1616,6 +1961,7 @@ audio {
       });
   }
 
+  applyRadioMood(initialCategory);
   loadStations(initialCategory);
 })();
 </script>
