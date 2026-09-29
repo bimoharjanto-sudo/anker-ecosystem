@@ -120,6 +120,8 @@ h1{
 }
 
 </style>
+  <meta property="og:image" content="https://ankerbellok.fluxcast.dev/anker-tv-logo.png">
+  <meta name="twitter:image" content="https://ankerbellok.fluxcast.dev/anker-tv-logo.png">
 </head>
 
 <body>
@@ -235,6 +237,56 @@ h1{
   border-radius:15px;
   padding:15px;
 }
+
+.channel:nth-child(1){
+  background:linear-gradient(135deg,#173b8f,#4b2c9b);
+}
+.channel:nth-child(2){
+  background:linear-gradient(135deg,#123f78,#087f9b);
+}
+.channel:nth-child(3){
+  background:linear-gradient(135deg,#174c7e,#0b8f91);
+}
+.channel:nth-child(4){
+  background:linear-gradient(135deg,#263c91,#6b35a8);
+}
+.channel:nth-child(5){
+  background:linear-gradient(135deg,#0757d9,#1746c7);
+}
+.channel:nth-child(6){
+  background:linear-gradient(135deg,#0b7d72,#155bb5);
+}
+.channel:nth-child(7){
+  background:linear-gradient(135deg,#183b73,#7651b5);
+}
+.channel:nth-child(8){
+  background:linear-gradient(135deg,#164d86,#7b3fb0);
+}
+.channel:nth-child(9){
+  background:linear-gradient(135deg,#9b321f,#c64b20);
+}
+.channel:nth-child(10){
+  background:linear-gradient(135deg,#65328f,#a52d5d);
+}
+.channel:nth-child(11){
+  background:linear-gradient(135deg,#101d45,#3d2b78);
+}
+
+.channel:nth-child(-n+11) h3,
+.channel:nth-child(-n+11) p{
+  color:#fff;
+}
+
+.channel:nth-child(-n+11) p{
+  opacity:.9;
+}
+
+.channel:nth-child(-n+11) button{
+  background:rgba(255,255,255,.92);
+  color:#10204a;
+  box-shadow:0 2px 8px rgba(0,0,0,.15);
+}
+
 .channel h3{
   margin:0 0 6px;
   font-size:16px;
@@ -410,7 +462,7 @@ function renderChannels(category="all"){
   countEl.textContent = list.length + " CHANNEL";
 
   channelsEl.innerHTML = list.map(item => `
-    <article class="channel">
+    <article class="channel${item.id === "trans-tv" ? " channel-trans-tv" : ""}">
       <h3>${item.name}</h3>
       <p>${item.description}</p>
       <button type="button" data-id="${item.id}">
