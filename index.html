@@ -1658,6 +1658,156 @@
      ANKER RADIO V1
      Front-page feature / radio entry
      ========================================================= -->
+
+<style>
+/* =========================================================
+   ANKER TV V1
+   Front-page feature / TV entry
+   ========================================================= */
+.anker-tv-section {
+  margin: 22px 0;
+  width: 100%;
+}
+
+.anker-tv-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px 22px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(80,140,255,.16), transparent 34%),
+    rgba(255,255,255,.035);
+  color: inherit;
+  text-decoration: none;
+}
+
+.anker-tv-main {
+  position: relative;
+  z-index: 2;
+}
+
+.anker-tv-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .78rem;
+  letter-spacing: .12em;
+  opacity: .78;
+}
+
+.anker-tv-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #6da8ff;
+  box-shadow: 0 0 12px rgba(109,168,255,.8);
+}
+
+.anker-tv-title {
+  margin: 8px 0 6px;
+}
+
+.anker-tv-text {
+  max-width: 620px;
+  margin: 0;
+  opacity: .72;
+}
+
+.anker-tv-action {
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+  font-size: .8rem;
+  letter-spacing: .08em;
+}
+
+.anker-tv-image {
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 150px;
+  height: 105px;
+  border-radius: 18px;
+  background: linear-gradient(145deg,#17191d,#08090b);
+  border: 3px solid #252932;
+  box-shadow: 0 12px 30px rgba(0,0,0,.45);
+  opacity: .92;
+}
+
+.anker-tv-image::before {
+  content: "";
+  position: absolute;
+  left: 14px;
+  top: 13px;
+  width: 88px;
+  height: 72px;
+  border-radius: 12px;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(100,160,255,.35), transparent 58%),
+    #05070a;
+  border: 2px solid #303640;
+  box-shadow: inset 0 0 18px rgba(80,130,255,.12);
+}
+
+.anker-tv-image::after {
+  content: "TV";
+  position: absolute;
+  right: 14px;
+  top: 39px;
+  color: rgba(255,255,255,.55);
+  font-size: 10px;
+  letter-spacing: .12em;
+}
+
+@media (max-width: 700px) {
+  .anker-tv-image {
+    width: 105px;
+    height: 78px;
+    right: 12px;
+  }
+
+  .anker-tv-image::before {
+    width: 62px;
+    height: 51px;
+  }
+
+  .anker-tv-text {
+    padding-right: 95px;
+  }
+}
+</style>
+
+<!-- =========================================================
+     ANKER TV V1
+     Front-page feature / TV entry
+     ========================================================= -->
+<section class="anker-tv-section" id="ankerTvSection" aria-label="ANKER TV">
+  <a class="anker-tv-card" href="/tv.html">
+    <div class="anker-tv-main">
+      <div class="anker-tv-label">
+        <span class="anker-tv-dot" aria-hidden="true"></span>
+        <span>ANKER TV</span>
+      </div>
+
+      <h2 class="anker-tv-title">Watch • Discover • Connect</h2>
+
+      <p class="anker-tv-text">
+        Nikmati pilihan siaran TV dari Indonesia dan dunia dalam satu tempat.
+      </p>
+    </div>
+
+    <span class="anker-tv-action">OPEN →</span>
+
+    <div class="anker-tv-image" aria-hidden="true"></div>
+  </a>
+</section>
+
 <section class="anker-radio-section" id="ankerRadioSection" aria-label="ANKER Radio">
   <a class="anker-radio-card" href="/radio.html">
     <div class="anker-radio-main">

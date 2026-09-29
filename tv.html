@@ -329,6 +329,24 @@ const channels = [
     url:"https://www.nusantaratv.com/live"
   },
   {
+    id:"trans-tv",
+    name:"TRANS TV",
+    category:"indonesia",
+    description:"TRANS TV — official embed player.",
+    type:"embed",
+    embedUrl:"https://20.detik.com/watch/livestreaming-transtv?smartautoplay=true",
+    url:"/transtv-test2.html"
+  },
+  {
+    id:"salira-tv",
+    name:"SALIRA TV",
+    category:"indonesia",
+    description:"SALIRA TV — official live HLS.",
+    type:"hls",
+    streamUrl:"https://live.salira.tv/p/3870/hybrid/play.m3u8",
+    url:"https://live.salira.tv/p/3870/hybrid/play.m3u8"
+  },
+  {
     id:"motorvision",
     name:"Motorvision",
     category:"automotive",
@@ -432,6 +450,21 @@ function selectChannel(id){
     screenNote.innerHTML = `
       <iframe
         src="https://www.youtube.com/embed/${channel.videoId}?rel=0"
+        title="${channel.name}"
+        allow="autoplay; encrypted-media; picture-in-picture"
+        allowfullscreen
+        style="width:100%;height:100%;border:0;border-radius:12px;"
+      ></iframe>
+    `;
+
+    tvStatus.textContent = "● PLAYING INSIDE ANKER TV";
+    return;
+  }
+
+  if(channel.type === "embed" && channel.embedUrl){
+    screenNote.innerHTML = `
+      <iframe
+        src="${channel.embedUrl}"
         title="${channel.name}"
         allow="autoplay; encrypted-media; picture-in-picture"
         allowfullscreen
