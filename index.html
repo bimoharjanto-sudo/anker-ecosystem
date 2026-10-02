@@ -1504,6 +1504,10 @@
         <span>🛍</span> SHOP
       </a>
 
+      <a href="https://www.digitalbook.io/id" target="_blank" rel="noopener">
+        <span>📚</span> LIBRARY
+      </a>
+
       <a href="https://anker-bot-web.bimoharjanto.workers.dev" target="_blank" rel="noopener">
         <span>🤖</span> BOT
       </a>
@@ -1835,6 +1839,178 @@
 <!-- =========================================================
      ANKER SHOP RSS FEED V1
      ========================================================= -->
+
+<!-- =========================================================
+     ANKER LIBRARY V1
+     Digitalbook discovery entry
+     ========================================================= -->
+<style>
+.anker-library-section {
+  margin: 22px 0;
+  width: 100%;
+}
+
+.anker-library-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 20px 22px;
+  overflow: hidden;
+  border: 1px solid rgba(255,255,255,.14);
+  border-radius: 16px;
+  background:
+    radial-gradient(circle at 82% 18%, rgba(145,95,255,.18), transparent 32%),
+    radial-gradient(circle at 20% 100%, rgba(70,100,180,.10), transparent 38%),
+    rgba(255,255,255,.035);
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform .22s ease,
+    border-color .22s ease,
+    box-shadow .22s ease;
+}
+
+.anker-library-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(180,150,255,.34);
+  box-shadow: 0 14px 34px rgba(0,0,0,.28);
+}
+
+.anker-library-main {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+}
+
+.anker-library-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: .78rem;
+  letter-spacing: .12em;
+  opacity: .78;
+}
+
+.anker-library-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #a987ff;
+  box-shadow: 0 0 12px rgba(169,135,255,.8);
+}
+
+.anker-library-title {
+  margin: 8px 0 6px;
+  font-weight: 800;
+  letter-spacing: .01em;
+}
+
+.anker-library-text {
+  max-width: 620px;
+  margin: 0;
+  opacity: .72;
+}
+
+.anker-library-action {
+  position: relative;
+  z-index: 2;
+  white-space: nowrap;
+  font-size: .8rem;
+  letter-spacing: .08em;
+}
+
+.anker-library-image {
+  position: absolute;
+  right: 22px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 150px;
+  height: 105px;
+  border-radius: 18px;
+  background: linear-gradient(145deg,#1a1822,#08090b);
+  border: 2px solid #343044;
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.45),
+    inset 0 0 20px rgba(170,130,255,.10);
+  opacity: .94;
+}
+
+.anker-library-image::before {
+  content: "📖";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -54%);
+  font-size: 42px;
+}
+
+.anker-library-image::after {
+  content: "READ • LISTEN";
+  position: absolute;
+  left: 50%;
+  bottom: 10px;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,.48);
+  font-size: 9px;
+  letter-spacing: .12em;
+  white-space: nowrap;
+}
+
+@media (max-width: 700px) {
+  .anker-library-card {
+    padding: 18px;
+  }
+
+  .anker-library-image {
+    width: 105px;
+    height: 78px;
+    right: 12px;
+  }
+
+  .anker-library-image::before {
+    font-size: 30px;
+  }
+
+  .anker-library-text {
+    padding-right: 92px;
+  }
+}
+</style>
+
+<!-- =========================================================
+     ANKER LIBRARY V1
+     Digitalbook discovery entry
+     ========================================================= -->
+<section class="anker-library-section" id="ankerLibrarySection" aria-label="ANKER Library">
+  <a
+    class="anker-library-card"
+    href="https://www.digitalbook.io/id"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Buka ANKER Library di Digitalbook"
+  >
+    <div class="anker-library-main">
+      <div class="anker-library-label">
+        <span class="anker-library-dot" aria-hidden="true"></span>
+        <span>ANKER LIBRARY</span>
+      </div>
+
+      <h2 class="anker-library-title">Read • Listen • Discover</h2>
+
+      <p class="anker-library-text">
+        Jelajahi ebook dan audiobook dari berbagai kategori dan bahasa
+        melalui Digitalbook dalam satu pintu dari ANKER ONE HUB.
+      </p>
+    </div>
+
+    <span class="anker-library-action">EXPLORE →</span>
+
+    <div class="anker-library-image" aria-hidden="true"></div>
+  </a>
+</section>
+
 <section class="anker-shop-section" id="ankerShopSection">
   <div class="anker-shop-title">
     ANKER SHOP
